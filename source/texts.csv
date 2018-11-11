@@ -1,0 +1,66 @@
+id,en,de
+START,Start!,Start!
+PAUSE,Pause,Pause
+RESUME,Resume,Weiter
+SETTINGS,Settings,Einstellungen
+LANGUAGE,Language,Sprache
+SAVE_SETTINGS,Save settings!,Einstellungen speichern!
+MINX,Window width,Fensterbreite
+MINY,Window height,Fensterhöhe
+MARGIN,Margin,Lücke
+AUTOSAVE,Autosave,Automatisch speichern
+SCALE,Scale,Skalieren
+START_TOOLTIP,Start a new game!,Starte ein neues Spiel!
+NICE_TOOLTIP,Get a nice Start!,Gib mir einen netten Start!
+TIME_TOOLTIP,Time passed,Vergangene Zeit
+PAUSE_TOOLTIP,Pause game!,Spiel pausieren!
+RESUME_TOOLTIP,Resume game!,Weiterspielen!
+REMAINING_TOOLTIP,Remaining mines,Verbleibende Minen
+SETTINGS_TOOLTIP,Open settings menu!,Einstellungsmenü öffnen!
+LANGUAGE_TOOLTIP,Choose language,Sprache wählen
+MINX_TOOLTIP,Set the minimum window width,Die minimale Fensterbreite einstellen
+MINY_TOOLTIP,Set the minimum window height,Die minimale Fensterhöhe einstellen
+MARGIN_TOOLTIP,Set the margin size for dimension 3 and 4 rectangles,Setze die Lückengröße für die Rechtecke der Dimensionen 3 und 4
+AUTOSAVE_TOOLTIP,Automatically save the game and load it on startup,Speichert das spiel automatisch und lädt es wieder beim Programmstart
+SCALE_TOOLTIP,Set the scale factor for the game board,Den Skalierungsfaktor für das Spielfeld einstellen
+SAVE_SETTINGS_TOOLTIP,Save settings including board settings and the delta setting,"Speichere die Einstellungen, einschließlich der Spielfeldeinstellungen und der Deltaeinstellung"
+WIN_TITLE,You WIN!,GEWONNEN!
+WIN,You have won this game :-),Du hast dieses Spiel gewonnen :-)
+LOSE_TITLE,You LOSE!,VERLOREN!
+LOSE,You have lost this game :-(,Du hast dieses Spiel verloren :-(
+SETTINGS_TITLE,Settings menu,Einstellungsmenü
+SORRY_TITLE,Sorry!,Tut mir leid!
+SORRY,No 0 was found :-(,Es wurde keine 0 gefunden :-(
+SIZE1_TOOLTIP,Set the size of dimension 1,Wähle die Größe für Dimension 1
+SIZE2_TOOLTIP,Set the size of dimension 2,Wähle die Größe für Dimension 2
+SIZE3_TOOLTIP,Set the size of dimension 3,Wähle die Größe für Dimension 3
+SIZE4_TOOLTIP,Set the size of dimension 4,Wähle die Größe für Dimension 4
+SPHERE1_TOOLTIP,Make dimension 1 spherical,Mache Dimension 1 sphärisch
+SPHERE2_TOOLTIP,Make dimension 2 spherical,Mache Dimension 2 sphärisch
+SPHERE3_TOOLTIP,Make dimension 3 spherical,Mache Dimension 3 sphärisch
+SPHERE4_TOOLTIP,Make dimension 4 spherical,Mache Dimension 4 sphärisch
+MINES_TOOLTIP,Set the number of mines,Wähle die Anzahl der Minen
+DELTA_TOOLTIP,"Show the remaining mines for each square, not the total number","Statt der Gesamtzahl, zeige die verbleibende Anzahl der Minen für jedes Feld"
+EXPORT,Export!,Exportieren!
+IMPORT,Import!,Importieren!
+EXPORT_TOOLTIP,Export this game to the file named on the right!,Exportiere dieses Spiel in die rechtsstehende Datei!
+IMPORT_TOOLTIP,Import the game file on the right!,Importiere die Spieledatei zur Rechten!
+EXPORT_NAME_TOOLTIP,Name of file to export to,"Name der Datei, in die exportiert wird"
+IMPORT_NAME_TOOLTIP,Name of file that gets imported,"Name der Datei, die importiert wird"
+EXPORT_TITLE,Exported,Exportiert
+EXPORT_CONFIRMATION,Game was exported,Spiel wurde exportiert
+IMPORT_TITLE,Imported,Importiert
+IMPORT_CONFIRMATION,Game was imported,Spiel wurde importiert
+EXPORT_FAILED_TITLE,Export failed,Exportieren fehlgeschlagen
+EXPORT_FAILED_CONFIRMATION,"Game could not be exported with this name.
+Illegal characters are / \ : * "" ?< > |
+Illegal names are successes, save.sav and config.cfg","Spiel konnte nicht mit diesem Namen exportiert werden.
+Verbotene Zeichen sind  / \ : * "" ? < > |
+Verbotene Namen sind successes, save.sav und config.cfg"
+EXISTS,File already exists and will be overwritten,Datei existiert bereits und wird überschrieben
+PAUSED,Game is paused!,Spiel ist pausiert!
+YES,Yes!,Ja!
+NO,No!,Nein!
+START_NEW,Do you want to start a new game?,Möchtest du ein neues Spiel starten?
+CLOSE,Close,Schließen
+RESTART,Start new Game!,Starte neues Spiel!
