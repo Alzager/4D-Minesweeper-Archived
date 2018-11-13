@@ -2,6 +2,11 @@ extends Control
 
 var mine_texture = ImageTexture.new()
 var delta_texture = ImageTexture.new()
+var sphere_texture = ImageTexture.new()
+var down_texture = ImageTexture.new()
+var right_texture = ImageTexture.new()
+var super_down_texture = ImageTexture.new()
+var super_right_texture = ImageTexture.new()
 
 func _ready():
 	switch_locale()
@@ -50,24 +55,61 @@ func switch_locale():
 func resize():
 	var L2y = 0
 	$Line1/D0Value.get_font("font").size = 11 * global.scale
-	$Line1/D0Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	$Line1/D0Value.rect_size = Vector2($Line1/D0Value.get_font("font").get_string_size("9999").x, 0)
 	L2y = max(L2y, $Line1/D0Value.rect_size.y)
 	$Line1/D0Value.text = $Line1/D0Value.text
 	$Line1/D1Value.get_font("font").size = 11 * global.scale
-	$Line1/D1Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	$Line1/D1Value.rect_size = Vector2($Line1/D1Value.get_font("font").get_string_size("9999").x, 0)
 	L2y = max(L2y, $Line1/D1Value.rect_size.y)
 	$Line1/D1Value.text = $Line1/D1Value.text
 	$Line1/D2Value.get_font("font").size = 11 * global.scale
-	$Line1/D2Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	$Line1/D2Value.rect_size = Vector2($Line1/D2Value.get_font("font").get_string_size("9999").x, 0)
 	L2y = max(L2y, $Line1/D2Value.rect_size.y)
 	$Line1/D2Value.text = $Line1/D2Value.text
 	$Line1/D3Value.get_font("font").size = 11 * global.scale
-	$Line1/D3Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	$Line1/D3Value.rect_size = Vector2($Line1/D3Value.get_font("font").get_string_size("9999").x, 0)
 	L2y = max(L2y, $Line1/D3Value.rect_size.y)
 	$Line1/Value.text = $Line1/Value.text
 	$Line1/Value.get_font("font").size = 11 * global.scale
-	$Line1/Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("999999").x, 0)
+	$Line1/Value.rect_size = Vector2($Line1/Value.get_font("font").get_string_size("9999999").x, 0)
 	L2y = max(L2y, $Line1/D3Value.rect_size.y)
+	
+	var checkbox_scale = L2y / 24
+	$Line1/D0CheckBox.rect_scale = Vector2(checkbox_scale, checkbox_scale)
+	$Line1/D1CheckBox.rect_scale = $Line1/D0CheckBox.rect_scale
+	$Line1/D2CheckBox.rect_scale = $Line1/D0CheckBox.rect_scale
+	$Line1/D3CheckBox.rect_scale = $Line1/D0CheckBox.rect_scale
+	
+	var sphere_scale = L2y / global.sphere_image.get_size().y
+	sphere_texture.create_from_image(global.sphere_image)
+	sphere_texture.set_size_override(global.sphere_image.get_size() * sphere_scale)
+	$Line1/D0Sprite.texture = delta_texture
+	$Line1/D0Sprite.texture = sphere_texture
+	$Line1/D1Sprite.texture = delta_texture
+	$Line1/D1Sprite.texture = sphere_texture
+	$Line1/D2Sprite.texture = delta_texture
+	$Line1/D2Sprite.texture = sphere_texture
+	$Line1/D3Sprite.texture = delta_texture
+	$Line1/D3Sprite.texture = sphere_texture
+	
+	var arrow_scale = L2y / global.down_image.get_size().y
+	right_texture.create_from_image(global.right_image)
+	right_texture.set_size_override(global.right_image.get_size() * arrow_scale)
+	$Line1/D0.texture = delta_texture
+	$Line1/D0.texture = right_texture
+	down_texture.create_from_image(global.down_image)
+	down_texture.set_size_override(global.down_image.get_size() * arrow_scale)
+	$Line1/D1.texture = delta_texture
+	$Line1/D1.texture = down_texture
+	super_right_texture.create_from_image(global.super_right_image)
+	super_right_texture.set_size_override(global.super_right_image.get_size() * arrow_scale)
+	$Line1/D2.texture = delta_texture
+	$Line1/D2.texture = super_right_texture
+	super_down_texture.create_from_image(global.super_down_image)
+	super_down_texture.set_size_override(global.super_down_image.get_size() * arrow_scale)
+	$Line1/D3.texture = delta_texture
+	$Line1/D3.texture = super_down_texture
+	
 	$Line1/D3Value.text = $Line1/D3Value.text
 	$Line1/D0Value.rect_position.x = $Line1/D0.position.x + $Line1/D0.texture.get_size().x
 	$Line1/D0CheckBox.rect_position.x = $Line1/D0Value.rect_position.x + $Line1/D0Value.rect_size.x
@@ -90,9 +132,10 @@ func resize():
 	
 	$Line1.rect_size.y = $Line1/Value.rect_position.y + L2y
 	
-	var mine_scale = $Line1.rect_size.y / global.mine_image.get_size().y
+	var mine_scale = L2y / global.mine_image.get_size().y
 	mine_texture.create_from_image(global.mine_image)
 	mine_texture.set_size_override(global.mine_image.get_size() * mine_scale)
+	$Line1/Mine.texture = delta_texture
 	$Line1/Mine.texture = mine_texture
 	$Line1/Mine.position.x = $Line1/D3Sprite.position.x + $Line1/D3Sprite.texture.get_size().x + 3 * global.margin * global.scale
 	$Line1/Value.rect_position.x = $Line1/Mine.position.x + $Line1/Mine.texture.get_size().x * $Line1/Mine.scale.x
@@ -152,9 +195,10 @@ func resize():
 	var delta_scale = $Line2.rect_size.y / global.delta_image.get_size().y
 	delta_texture.create_from_image(global.delta_image)
 	delta_texture.set_size_override(global.delta_image.get_size() * delta_scale)
+	$Line2/Delta.texture = mine_texture
 	$Line2/Delta.texture = delta_texture
 	$Line2/Delta.position.x = $Line2/Settings.rect_position.x + $Line2/Settings.rect_size.x + 3 * global.margin * global.scale
-	var checkbox_scale = $Line2.rect_size.y / 24
+	checkbox_scale = $Line2.rect_size.y / 24
 	$Line2/CheckBox.rect_scale = Vector2(checkbox_scale, checkbox_scale)
 	$Line2/CheckBox.rect_position.x = $Line2/Delta.position.x + $Line2/Delta.texture.get_size().x
 	

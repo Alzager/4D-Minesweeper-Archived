@@ -45,6 +45,11 @@ var savefile = "user://save.sav"
 var mine_image = Image.new()
 var delta_image = Image.new()
 var flag_image = Image.new()
+var sphere_image = Image.new()
+var down_image = Image.new()
+var right_image = Image.new()
+var super_down_image = Image.new()
+var super_right_image = Image.new()
 var exports = ProjectSettings.globalize_path("res://")
 var drag_start = []
 var resizing = false
@@ -231,6 +236,11 @@ func _ready():
 	delta_image = get_tree().get_root().get_node("Main").get_node("Delta").texture.get_data()
 	flag_image = get_tree().get_root().get_node("Main").get_node("Flag").texture.get_data()
 	mine_image = get_tree().get_root().get_node("Main").get_node("Mine").texture.get_data()
+	sphere_image = get_tree().get_root().get_node("Main").get_node("Sphere").texture.get_data()
+	down_image = get_tree().get_root().get_node("Main").get_node("Down").texture.get_data()
+	right_image = get_tree().get_root().get_node("Main").get_node("Right").texture.get_data()
+	super_down_image = get_tree().get_root().get_node("Main").get_node("SuperDown").texture.get_data()
+	super_right_image = get_tree().get_root().get_node("Main").get_node("SuperRight").texture.get_data()
 	read_config()
 	if OS.get_name() == "OSX":
 		exports = ProjectSettings.globalize_path("res://") + "../../../"
@@ -310,6 +320,7 @@ func _process(delta):
 		changed = false
 		global.scale = clamp(global.scale, 0.5, 4)
 		global.write_config()
+		settings_menu.update_ui()
 		global.resize()
 
 func sanitize_settings():
@@ -425,7 +436,7 @@ func _input(event):
 			lose()
 		elif remaining == 0:
 			win()
-	if event is InputEventMouseButton && Input.is_key_pressed(OS.find_scancode_from_string("Control")):
+	if event is InputEventMouseButton && event.pressed && Input.is_key_pressed(OS.find_scancode_from_string("Control")):
 		if event.button_index == 4:
 			global.scale = global.scale + 0.1
 			changed = true

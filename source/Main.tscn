@@ -1,10 +1,15 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://delta.svg" type="Texture" id=1]
 [ext_resource path="res://flag.svg" type="Texture" id=2]
 [ext_resource path="res://mine.svg" type="Texture" id=3]
+[ext_resource path="res://sphere.svg" type="Texture" id=4]
+[ext_resource path="res://down.svg" type="Texture" id=5]
+[ext_resource path="res://right.svg" type="Texture" id=6]
+[ext_resource path="res://super_down.svg" type="Texture" id=7]
+[ext_resource path="res://super_right.svg" type="Texture" id=8]
 
-[node name="Main" type="Control" index="0"]
+[node name="Main" type="Control"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -35,6 +40,36 @@ _sections_unfolded = [ "Visibility" ]
 
 visible = false
 texture = ExtResource( 3 )
+_sections_unfolded = [ "Visibility" ]
+
+[node name="Sphere" type="Sprite" parent="." index="3"]
+
+visible = false
+texture = ExtResource( 4 )
+_sections_unfolded = [ "Visibility" ]
+
+[node name="Down" type="Sprite" parent="." index="4"]
+
+visible = false
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Visibility" ]
+
+[node name="Right" type="Sprite" parent="." index="5"]
+
+visible = false
+texture = ExtResource( 6 )
+_sections_unfolded = [ "Visibility" ]
+
+[node name="SuperDown" type="Sprite" parent="." index="6"]
+
+visible = false
+texture = ExtResource( 7 )
+_sections_unfolded = [ "Visibility" ]
+
+[node name="SuperRight" type="Sprite" parent="." index="7"]
+
+visible = false
+texture = ExtResource( 8 )
 _sections_unfolded = [ "Visibility" ]
 
 
