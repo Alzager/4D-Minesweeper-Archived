@@ -1,21 +1,22 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Menu.gd" type="Script" id=1]
 [ext_resource path="res://right.svg" type="Texture" id=2]
-[ext_resource path="res://sphere.svg" type="Texture" id=3]
-[ext_resource path="res://down.svg" type="Texture" id=4]
-[ext_resource path="res://super_down.svg" type="Texture" id=5]
-[ext_resource path="res://super_right.svg" type="Texture" id=6]
-[ext_resource path="res://mine.svg" type="Texture" id=7]
-[ext_resource path="res://Monda-Bold.ttf" type="DynamicFontData" id=8]
-[ext_resource path="res://delta.svg" type="Texture" id=9]
+[ext_resource path="res://Monda-Bold.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Value.gd" type="Script" id=4]
+[ext_resource path="res://sphere.svg" type="Texture" id=5]
+[ext_resource path="res://down.svg" type="Texture" id=6]
+[ext_resource path="res://super_down.svg" type="Texture" id=7]
+[ext_resource path="res://super_right.svg" type="Texture" id=8]
+[ext_resource path="res://mine.svg" type="Texture" id=9]
+[ext_resource path="res://delta.svg" type="Texture" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 
 size = 0
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 8 )
+font_data = ExtResource( 3 )
 _sections_unfolded = [ "Font" ]
 
 [sub_resource type="DynamicFont" id=2]
@@ -23,15 +24,15 @@ _sections_unfolded = [ "Font" ]
 size = 0
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 8 )
-_sections_unfolded = [ "Font", "Resource" ]
+font_data = ExtResource( 3 )
+_sections_unfolded = [ "Font" ]
 
 [sub_resource type="DynamicFont" id=3]
 
 size = 0
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 8 )
+font_data = ExtResource( 3 )
 _sections_unfolded = [ "Font" ]
 
 [sub_resource type="DynamicFont" id=4]
@@ -39,7 +40,7 @@ _sections_unfolded = [ "Font" ]
 size = 0
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 8 )
+font_data = ExtResource( 3 )
 _sections_unfolded = [ "Font" ]
 
 [sub_resource type="DynamicFont" id=5]
@@ -47,7 +48,7 @@ _sections_unfolded = [ "Font" ]
 size = 0
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 8 )
+font_data = ExtResource( 3 )
 _sections_unfolded = [ "Font" ]
 
 [sub_resource type="DynamicFont" id=6]
@@ -55,10 +56,42 @@ _sections_unfolded = [ "Font" ]
 size = 0
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 8 )
+font_data = ExtResource( 3 )
+_sections_unfolded = [ "Font", "Resource" ]
+
+[sub_resource type="DynamicFont" id=7]
+
+size = 0
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 3 )
 _sections_unfolded = [ "Font" ]
 
-[node name="Menu" type="Control"]
+[sub_resource type="DynamicFont" id=8]
+
+size = 0
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 3 )
+_sections_unfolded = [ "Font" ]
+
+[sub_resource type="DynamicFont" id=9]
+
+size = 0
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 3 )
+_sections_unfolded = [ "Font" ]
+
+[sub_resource type="DynamicFont" id=10]
+
+size = 0
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 3 )
+_sections_unfolded = [ "Font" ]
+
+[node name="Menu" type="Control" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -95,31 +128,31 @@ texture = ExtResource( 2 )
 centered = false
 _sections_unfolded = [ "Offset", "Region" ]
 
-[node name="D0Value" type="SpinBox" parent="Line1" index="1"]
+[node name="D0Value" type="LineEdit" parent="Line1" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 74.0
+margin_right = 58.0
 margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
+focus_mode = 2
 mouse_filter = 0
-mouse_default_cursor_shape = 0
+mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
-min_value = 1.0
-max_value = 999.0
-step = 1.0
-page = 0.0
-value = 4.0
-exp_edit = false
-rounded = false
-editable = true
-prefix = ""
-suffix = ""
-_sections_unfolded = [ "Focus" ]
+custom_fonts/font = SubResource( 1 )
+align = 2
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+script = ExtResource( 4 )
+_sections_unfolded = [ "custom_fonts" ]
 
 [node name="D0CheckBox" type="CheckBox" parent="Line1" index="2"]
 
@@ -145,40 +178,41 @@ align = 0
 
 [node name="D0Sprite" type="Sprite" parent="Line1" index="3"]
 
-texture = ExtResource( 3 )
+texture = ExtResource( 5 )
 centered = false
 _sections_unfolded = [ "Offset" ]
 
 [node name="D1" type="Sprite" parent="Line1" index="4"]
 
-texture = ExtResource( 4 )
+texture = ExtResource( 6 )
 centered = false
 _sections_unfolded = [ "Offset", "Region" ]
 
-[node name="D1Value" type="SpinBox" parent="Line1" index="5"]
+[node name="D1Value" type="LineEdit" parent="Line1" index="5"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 74.0
+margin_right = 58.0
 margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
+focus_mode = 2
 mouse_filter = 0
-mouse_default_cursor_shape = 0
+mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
-min_value = 1.0
-max_value = 999.0
-step = 1.0
-page = 0.0
-value = 4.0
-exp_edit = false
-rounded = false
-editable = true
-prefix = ""
-suffix = ""
+custom_fonts/font = SubResource( 2 )
+align = 2
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+script = ExtResource( 4 )
+_sections_unfolded = [ "custom_fonts" ]
 
 [node name="D1CheckBox" type="CheckBox" parent="Line1" index="6"]
 
@@ -204,40 +238,41 @@ align = 0
 
 [node name="D1Sprite" type="Sprite" parent="Line1" index="7"]
 
-texture = ExtResource( 3 )
+texture = ExtResource( 5 )
 centered = false
 _sections_unfolded = [ "Offset" ]
 
 [node name="D2" type="Sprite" parent="Line1" index="8"]
 
-texture = ExtResource( 5 )
+texture = ExtResource( 7 )
 centered = false
 _sections_unfolded = [ "Offset", "Region" ]
 
-[node name="D2Value" type="SpinBox" parent="Line1" index="9"]
+[node name="D2Value" type="LineEdit" parent="Line1" index="9"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 74.0
+margin_right = 58.0
 margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
+focus_mode = 2
 mouse_filter = 0
-mouse_default_cursor_shape = 0
+mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
-min_value = 1.0
-max_value = 999.0
-step = 1.0
-page = 0.0
-value = 4.0
-exp_edit = false
-rounded = false
-editable = true
-prefix = ""
-suffix = ""
+custom_fonts/font = SubResource( 3 )
+align = 2
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+script = ExtResource( 4 )
+_sections_unfolded = [ "custom_fonts" ]
 
 [node name="D2CheckBox" type="CheckBox" parent="Line1" index="10"]
 
@@ -263,40 +298,41 @@ align = 0
 
 [node name="D2Sprite" type="Sprite" parent="Line1" index="11"]
 
-texture = ExtResource( 3 )
+texture = ExtResource( 5 )
 centered = false
 _sections_unfolded = [ "Offset" ]
 
 [node name="D3" type="Sprite" parent="Line1" index="12"]
 
-texture = ExtResource( 6 )
+texture = ExtResource( 8 )
 centered = false
 _sections_unfolded = [ "Offset", "Region" ]
 
-[node name="D3Value" type="SpinBox" parent="Line1" index="13"]
+[node name="D3Value" type="LineEdit" parent="Line1" index="13"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 74.0
+margin_right = 58.0
 margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
+focus_mode = 2
 mouse_filter = 0
-mouse_default_cursor_shape = 0
+mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
-min_value = 1.0
-max_value = 999.0
-step = 1.0
-page = 0.0
-value = 4.0
-exp_edit = false
-rounded = false
-editable = true
-prefix = ""
-suffix = ""
+custom_fonts/font = SubResource( 4 )
+align = 2
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+script = ExtResource( 4 )
+_sections_unfolded = [ "custom_fonts" ]
 
 [node name="D3CheckBox" type="CheckBox" parent="Line1" index="14"]
 
@@ -322,41 +358,41 @@ align = 0
 
 [node name="D3Sprite" type="Sprite" parent="Line1" index="15"]
 
-texture = ExtResource( 3 )
+texture = ExtResource( 5 )
 centered = false
 _sections_unfolded = [ "Offset" ]
 
 [node name="Mine" type="Sprite" parent="Line1" index="16"]
 
-texture = ExtResource( 7 )
+texture = ExtResource( 9 )
 centered = false
 _sections_unfolded = [ "Animation", "Material", "Offset", "Region", "Transform", "Visibility", "Z Index" ]
 
-[node name="Value" type="SpinBox" parent="Line1" index="17"]
+[node name="Value" type="LineEdit" parent="Line1" index="17"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 74.0
+margin_right = 58.0
 margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
+focus_mode = 2
 mouse_filter = 0
-mouse_default_cursor_shape = 0
+mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
-min_value = 1.0
-max_value = 99999.0
-step = 1.0
-page = 0.0
-value = 10.0
-exp_edit = false
-rounded = false
-editable = true
-prefix = ""
-suffix = ""
-_sections_unfolded = [ "Rect" ]
+custom_fonts/font = SubResource( 4 )
+align = 2
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+script = ExtResource( 4 )
+_sections_unfolded = [ "custom_fonts" ]
 
 [node name="Line2" type="Container" parent="." index="1"]
 
@@ -388,7 +424,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 5 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -413,7 +449,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 6 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -438,7 +474,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 7 )
 text = "000:00:00.00"
 align = 2
 editable = false
@@ -465,7 +501,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 8 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -490,7 +526,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 9 )
 text = "99999"
 align = 2
 editable = false
@@ -517,7 +553,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 10 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -529,7 +565,7 @@ _sections_unfolded = [ "custom_fonts" ]
 
 [node name="Delta" type="Sprite" parent="Line2" index="6"]
 
-texture = ExtResource( 9 )
+texture = ExtResource( 10 )
 centered = false
 _sections_unfolded = [ "Offset", "Region", "Transform" ]
 

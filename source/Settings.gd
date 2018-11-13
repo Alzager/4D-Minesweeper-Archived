@@ -41,7 +41,7 @@ func resize():
 	$LanguageOptionButton.rect_position.y = $LanguageLabel.rect_position.y
 	$LanguageOptionButton.rect_size.x = 100 * global.scale
 	$LanguageOptionButton.rect_size.y = 0
-	sizey = min($LanguageLabel.rect_size.y, $LanguageOptionButton.rect_size.y)
+	sizey = max($LanguageLabel.rect_size.y, $LanguageOptionButton.rect_size.y)
 	$LanguageLabel.rect_size.y = sizey
 	$LanguageOptionButton.rect_size.y = sizey
 	$MarginLabel.get_font("font").size = 16 * global.scale
@@ -50,6 +50,10 @@ func resize():
 	$MarginLabel.rect_size = Vector2(0, 0)
 	col2x = max(col2x, $MarginLabel.rect_size.x)
 	$MarginSpinBox.rect_position.y = $MarginLabel.rect_position.y
+	$MarginSpinBox.rect_size.y = 0
+	sizey = max($MarginLabel.rect_size.y, $MarginSpinBox.rect_size.y)
+	$MarginLabel.rect_size.y = sizey
+	$MarginSpinBox.rect_size.y = sizey
 	$LanguageOptionButton.rect_size.y = $LanguageLabel.rect_size.y
 	$ScaleLabel.get_font("font").size = 16 * global.scale
 	$ScaleLabel.rect_position.x = $LanguageLabel.rect_position.x

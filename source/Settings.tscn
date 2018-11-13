@@ -27,7 +27,7 @@ use_filter = false
 font_data = ExtResource( 2 )
 _sections_unfolded = [ "Font" ]
 
-[node name="Settings" type="WindowDialog" index="0"]
+[node name="Settings" type="WindowDialog"]
 
 anchor_left = 0.0
 anchor_top = 0.0

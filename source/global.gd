@@ -280,11 +280,11 @@ func read_config():
 
 func write_config():
 	var configFile = ConfigFile.new()
-	var save_size = [int(menu.get_node("Line1/D0Value").value), int(menu.get_node("Line1/D1Value").value), int(menu.get_node("Line1/D2Value").value), int(menu.get_node("Line1/D3Value").value)]
+	var save_size = [int(menu.get_node("Line1/D0Value").text), int(menu.get_node("Line1/D1Value").text), int(menu.get_node("Line1/D2Value").text), int(menu.get_node("Line1/D3Value").text)]
 	var save_sphere = [int(menu.get_node("Line1/D0CheckBox").pressed), int(menu.get_node("Line1/D1CheckBox").pressed), int(menu.get_node("Line1/D2CheckBox").pressed), int(menu.get_node("Line1/D3CheckBox").pressed)]
 	configFile.set_value("Config", "size", save_size)
 	configFile.set_value("Config", "sphere", save_sphere)
-	configFile.set_value("Config", "mines", int(menu.get_node("Line1/Value").value))
+	configFile.set_value("Config", "mines", int(menu.get_node("Line1/Value").text))
 	configFile.set_value("Config", "o", margin)
 	configFile.set_value("Config", "scale_factor", scale)
 	configFile.set_value("Config", "delta_box", int(menu.get_node("Line2/CheckBox").pressed))
@@ -463,6 +463,7 @@ func clear_board():
 			for c in range(global.blocks[0][0].size()):
 				for d in range(global.blocks[0][0][0].size()):
 					blocks[a][b][c][d].neighbors = []
+					blocks[a][b][c][d].coordinates = [-1, -1, -1, -1]
 					blocks[a][b][c][d].queue_free()
 	board.queue_free()
 	blocks = []

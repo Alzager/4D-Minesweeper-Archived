@@ -16,7 +16,7 @@ use_filter = false
 font_data = SubResource( 1 )
 _sections_unfolded = [ "Font", "Settings" ]
 
-[node name="Block" type="Node2D"]
+[node name="Block" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
 

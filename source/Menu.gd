@@ -48,6 +48,27 @@ func switch_locale():
 	$Line2/CheckBox.hint_tooltip = TranslationServer.translate("DELTA_TOOLTIP")
 
 func resize():
+	var L2y = 0
+	$Line1/D0Value.get_font("font").size = 11 * global.scale
+	$Line1/D0Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	L2y = max(L2y, $Line1/D0Value.rect_size.y)
+	$Line1/D0Value.text = $Line1/D0Value.text
+	$Line1/D1Value.get_font("font").size = 11 * global.scale
+	$Line1/D1Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	L2y = max(L2y, $Line1/D1Value.rect_size.y)
+	$Line1/D1Value.text = $Line1/D1Value.text
+	$Line1/D2Value.get_font("font").size = 11 * global.scale
+	$Line1/D2Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	L2y = max(L2y, $Line1/D2Value.rect_size.y)
+	$Line1/D2Value.text = $Line1/D2Value.text
+	$Line1/D3Value.get_font("font").size = 11 * global.scale
+	$Line1/D3Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("9999").x, 0)
+	L2y = max(L2y, $Line1/D3Value.rect_size.y)
+	$Line1/Value.text = $Line1/Value.text
+	$Line1/Value.get_font("font").size = 11 * global.scale
+	$Line1/Value.rect_size = Vector2($Line2/Remaining.get_font("font").get_string_size("999999").x, 0)
+	L2y = max(L2y, $Line1/D3Value.rect_size.y)
+	$Line1/D3Value.text = $Line1/D3Value.text
 	$Line1/D0Value.rect_position.x = $Line1/D0.position.x + $Line1/D0.texture.get_size().x
 	$Line1/D0CheckBox.rect_position.x = $Line1/D0Value.rect_position.x + $Line1/D0Value.rect_size.x
 	$Line1/D0Sprite.position.x = $Line1/D0Value.rect_position.x + $Line1/D0Value.rect_size.x
@@ -67,7 +88,7 @@ func resize():
 	$Line1/D3CheckBox.rect_position.x = $Line1/D3Value.rect_position.x + $Line1/D3Value.rect_size.x
 	$Line1/D3Sprite.position.x = $Line1/D3Value.rect_position.x + $Line1/D3Value.rect_size.x
 	
-	$Line1.rect_size.y = $Line1/Value.rect_position.y + $Line1/Value.rect_size.y
+	$Line1.rect_size.y = $Line1/Value.rect_position.y + L2y
 	
 	var mine_scale = $Line1.rect_size.y / global.mine_image.get_size().y
 	mine_texture.create_from_image(global.mine_image)
@@ -149,25 +170,25 @@ func resize():
 	global.reposition()
 
 func get_settigs():
-	global.dimensions = [[int($Line1/D0Value.value), $Line1/D0CheckBox.pressed],
-		[int($Line1/D1Value.value), $Line1/D1CheckBox.pressed],
-		[int($Line1/D2Value.value), $Line1/D2CheckBox.pressed],
-		[int($Line1/D3Value.value), $Line1/D3CheckBox.pressed]]
-	global.mines = int($Line1/Value.value)
+	global.dimensions = [[int($Line1/D0Value.text), $Line1/D0CheckBox.pressed],
+		[int($Line1/D1Value.text), $Line1/D1CheckBox.pressed],
+		[int($Line1/D2Value.text), $Line1/D2CheckBox.pressed],
+		[int($Line1/D3Value.text), $Line1/D3CheckBox.pressed]]
+	global.mines = int($Line1/Value.text)
 	global.delta = int($Line2/CheckBox.pressed)
 	global.sanitize_settings()
 	set_settigs()
 
 func set_settigs():
-	$Line1/D0Value.value = global.dimensions[0][0]
+	$Line1/D0Value.text = str(global.dimensions[0][0])
 	$Line1/D0CheckBox.pressed = global.dimensions[0][1]
-	$Line1/D1Value.value = global.dimensions[1][0]
+	$Line1/D1Value.text = str(global.dimensions[1][0])
 	$Line1/D1CheckBox.pressed = global.dimensions[1][1]
-	$Line1/D2Value.value = global.dimensions[2][0]
+	$Line1/D2Value.text = str(global.dimensions[2][0])
 	$Line1/D2CheckBox.pressed = global.dimensions[2][1]
-	$Line1/D3Value.value = global.dimensions[3][0]
+	$Line1/D3Value.text = str(global.dimensions[3][0])
 	$Line1/D3CheckBox.pressed = global.dimensions[3][1]
-	$Line1/Value.value = global.mines
+	$Line1/Value.text = str(global.mines)
 	$Line2/CheckBox.pressed = global.delta
 
 func _on_CheckBox_toggled(button_pressed):

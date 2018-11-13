@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Win.gd" type="Script" id=1]
 [ext_resource path="res://Monda-Bold.ttf" type="DynamicFontData" id=2]
@@ -12,6 +12,14 @@ font_data = ExtResource( 2 )
 _sections_unfolded = [ "Font" ]
 
 [sub_resource type="DynamicFont" id=2]
+
+size = 0
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 2 )
+_sections_unfolded = [ "Font" ]
+
+[sub_resource type="DynamicFont" id=3]
 
 size = 0
 use_mipmaps = false
@@ -97,12 +105,14 @@ mouse_filter = 0
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
+custom_fonts/font = SubResource( 3 )
 focus_mode = 2
 context_menu_enabled = true
 placeholder_alpha = 0.6
 caret_blink = false
 caret_blink_speed = 0.65
 caret_position = 0
+_sections_unfolded = [ "custom_fonts" ]
 
 [node name="NewGame" type="Button" parent="." index="4"]
 

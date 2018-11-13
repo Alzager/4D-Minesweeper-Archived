@@ -16,10 +16,12 @@ func switch_locale():
 	_on_ExportLineEdit_text_changed()
 
 func resize():
+	var sizey
 	$Label.get_font("font").size = 16 * global.scale
 	$Export.get_font("font").size = 12 * global.scale
 	$NewGame.get_font("font").size = 12 * global.scale
 	$Close.get_font("font").size = 12 * global.scale
+	$ExportLineEdit.get_font("font").size = 11 * global.scale
 	$Label.rect_size = Vector2(0, 0)
 	rect_size.x = $Label.rect_size.x + global.margin * global.scale * 2
 	$Label.rect_position.x = global.margin * global.scale
@@ -27,7 +29,10 @@ func resize():
 	$Export.rect_size = Vector2(0, 0)
 	$Export.rect_position.x = $Label.rect_position.x
 	$Export.rect_position.y = $Label.rect_position.y + $Label.rect_size.y + global.margin * global.scale * 2
-	$ExportLineEdit.rect_size.y = $Export.rect_size.y
+	$ExportLineEdit.rect_size.y = 0
+	sizey = max($Label.rect_size.y, $ExportLineEdit.rect_size.y)
+	$Label.rect_size.y = sizey
+	$ExportLineEdit.rect_size.y = sizey
 	$ExportLineEdit.rect_size.x = 100 * global.scale
 	$ExportLineEdit.rect_position.x = rect_size.x - $ExportLineEdit.rect_size.x - global.margin * global.scale * 2
 	$ExportLineEdit.rect_position.y = $Export.rect_position.y
@@ -37,6 +42,9 @@ func resize():
 	$Close.rect_size = Vector2(0, 0)
 	$Close.rect_position.x = rect_size.x - $Close.rect_size.x - global.margin * global.scale * 2
 	$Close.rect_position.y = $NewGame.rect_position.y
+	sizey = max($NewGame.rect_size.y, $Close.rect_size.y)
+	$NewGame.rect_size.y = sizey
+	$Close.rect_size.y = sizey
 	rect_size.y = $NewGame.rect_position.y + $NewGame.rect_size.y + global.margin * global.scale * 2
 
 func _on_Export_pressed():
