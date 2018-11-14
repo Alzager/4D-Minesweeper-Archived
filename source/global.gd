@@ -25,8 +25,8 @@ var time_offset = 0
 var running_time = 0
 var starting_time = 0
 var config = "user://config.cfg"
-var minX = 620
-var minY = 620
+var minX = 600
+var minY = 600
 var save_on_exit = true
 var locale = "en"
 var settings = preload("res://Settings.tscn")
@@ -54,6 +54,7 @@ var exports = ProjectSettings.globalize_path("res://")
 var drag_start = []
 var resizing = false
 var changed = false
+var first_start = false
 
 func switch_locale():
 	TranslationServer.set_locale(locale)
@@ -62,13 +63,18 @@ func switch_locale():
 	resize()
 
 func resize():
-	resizing = true
-	for node in get_tree().get_nodes_in_group("resizable"):
-		node.resize()
-	reposition()
+	if ! resizing:
+		resizing = true
+		if OS.window_size.x < minX:
+			OS.window_size.x = minX
+		if OS.window_size.y < minY:
+			OS.window_size.y = minY
+		for node in get_tree().get_nodes_in_group("resizable"):
+			node.resize()
+		reposition()
 
 func reposition():
-	menu.rect_position.x = max(0, (OS.window_size.x - menu.rect_size.x) / 2)
+	menu.rect_position.x = 0
 	board.rect_position.x = (OS.window_size.x - board.rect_size.x) / 2
 	menu.rect_position.y = max(0, (OS.window_size.y - menu.rect_size.y - board.rect_size.y - global.margin * global.scale) / 2)
 	board.rect_position.y = global.menu.rect_position.y + global.menu.rect_size.y + global.margin * global.scale
@@ -286,6 +292,8 @@ func read_config():
 				save_on_exit = bool(configFile.get_value("Config", "save_on_exit"))
 			if configFile.has_section_key("Config", "locale"):
 				locale = configFile.get_value("Config", "locale")
+	else:
+		first_start = true
 	menu.set_settigs()
 
 func write_config():

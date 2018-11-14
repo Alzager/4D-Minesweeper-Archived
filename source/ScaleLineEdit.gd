@@ -9,10 +9,10 @@ func _on_gui_input(event):
 	var select = false
 	if has_focus() && (event is InputEventMouseButton || event is InputEventKey) && event.pressed && ! Input.is_key_pressed(OS.find_scancode_from_string("Control")):
 		if (event is InputEventMouseButton && event.button_index == 4) || (event is InputEventKey && event.as_text() == "Up"):
-			text = str(max(int(text) + 1, 1))
+			text = str(clamp(float(text) + 0.1, 0.5, 4))
 			select = true
 		elif (event is InputEventMouseButton && event.button_index == 5) || (event is InputEventKey && event.as_text() == "Down"):
-			text = str(max(int(text) - 1, 1))
+			text = str(clamp(float(text) - 0.1, 0.5, 4))
 			select = true
 	if has_focus() && event is InputEventMouseButton:
 		select = true

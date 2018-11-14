@@ -10,21 +10,24 @@ func _ready():
 	resize()
 	add_to_group("translations")
 	add_to_group("resizable")
+	if global.first_start:
+		popup_centered()
 
 func switch_locale():
 	window_title = TranslationServer.translate("SETTINGS_TITLE")
 	$LanguageLabel.text = TranslationServer.translate("LANGUAGE")
-	$LanguageLabel.hint_tooltip = TranslationServer.translate("LANGUAGE_TOOLTIP")
+	$LanguageOptionButton.hint_tooltip = TranslationServer.translate("LANGUAGE_TOOLTIP")
 	$MarginLabel.text = TranslationServer.translate("MARGIN")
-	$MarginSpinBox.hint_tooltip = TranslationServer.translate("MARGIN_TOOLTIP")
+	$MarginLineEdit.hint_tooltip = TranslationServer.translate("MARGIN_TOOLTIP")
 	$ScaleLabel.text = TranslationServer.translate("SCALE")
-	$ScaleLabel.hint_tooltip = TranslationServer.translate("SCALE_TOOLTIP")
+	$ScaleLineEdit.hint_tooltip = TranslationServer.translate("SCALE_TOOLTIP")
 	$AutosaveLabel.text = TranslationServer.translate("AUTOSAVE")
-	$AutosaveLabel.hint_tooltip = TranslationServer.translate("AUTOSAVE_TOOLTIP")
+	$AutosaveCheckBox.hint_tooltip = TranslationServer.translate("AUTOSAVE_TOOLTIP")
 	$ExportButton.text = TranslationServer.translate("EXPORT")
 	$ExportButton.hint_tooltip = TranslationServer.translate("EXPORT_TOOLTIP")
 	$ImportButton.text = TranslationServer.translate("IMPORT")
 	$ImportButton.hint_tooltip = TranslationServer.translate("IMPORT_TOOLTIP")
+	$ImportOptionButton.hint_tooltip = TranslationServer.translate("IMPORT_NAME_TOOLTIP")
 	$SaveButton.text = TranslationServer.translate("SAVE_SETTINGS")
 	$SaveButton.hint_tooltip = TranslationServer.translate("SAVE_SETTINGS_TOOLTIP")
 	_on_ExportLineEdit_text_changed()
@@ -49,42 +52,66 @@ func resize():
 	$MarginLabel.rect_position.y = $LanguageLabel.rect_position.y + $LanguageLabel.rect_size.y + global.margin * global.scale
 	$MarginLabel.rect_size = Vector2(0, 0)
 	col2x = max(col2x, $MarginLabel.rect_size.x)
-	$MarginSpinBox.rect_position.y = $MarginLabel.rect_position.y
-	$MarginSpinBox.rect_size.y = 0
-	sizey = max($MarginLabel.rect_size.y, $MarginSpinBox.rect_size.y)
+	$MarginLineEdit.rect_position.y = $MarginLabel.rect_position.y
+	$MarginLineEdit.text = $MarginLineEdit.text
+	$MarginLineEdit.get_font("font").size = 11 * global.scale
+	$MarginLineEdit.rect_size = Vector2($MarginLineEdit.get_font("font").get_string_size("99").x, 0)
+	sizey = max($MarginLabel.rect_size.y, $MarginLineEdit.rect_size.y)
 	$MarginLabel.rect_size.y = sizey
-	$MarginSpinBox.rect_size.y = sizey
+	$MarginLineEdit.rect_size.y = sizey
 	$LanguageOptionButton.rect_size.y = $LanguageLabel.rect_size.y
 	$ScaleLabel.get_font("font").size = 16 * global.scale
 	$ScaleLabel.rect_position.x = $LanguageLabel.rect_position.x
 	$ScaleLabel.rect_position.y = $MarginLabel.rect_position.y + $MarginLabel.rect_size.y + global.margin * global.scale
 	$ScaleLabel.rect_size = Vector2(0, 0)
 	col2x = max(col2x, $ScaleLabel.rect_size.x)
-	$ScaleSpinBox.rect_position.y = $ScaleLabel.rect_position.y
+	$ScaleLineEdit.rect_position.y = $ScaleLabel.rect_position.y
+	$ScaleLineEdit.text = $ScaleLineEdit.text
+	$ScaleLineEdit.get_font("font").size = 11 * global.scale
+	$ScaleLineEdit.rect_size = Vector2($ScaleLineEdit.get_font("font").get_string_size("3.33").x, 0)
+	sizey = max($ScaleLabel.rect_size.y, $ScaleLineEdit.rect_size.y)
+	$ScaleLabel.rect_size.y = sizey
+	$ScaleLineEdit.rect_size.y = sizey
 	$AutosaveLabel.rect_position.x = $LanguageLabel.rect_position.x
 	$AutosaveLabel.rect_position.y = $ScaleLabel.rect_position.y + $ScaleLabel.rect_size.y + global.margin * global.scale
 	$AutosaveLabel.rect_size = Vector2(0, 0)
 	col2x = max(col2x, $AutosaveLabel.rect_size.x)
 	$AutosaveCheckBox.rect_position.y = $AutosaveLabel.rect_position.y
+	var checkbox_scale = $AutosaveLabel.rect_size.y / 24
+	$AutosaveCheckBox.rect_scale = Vector2(checkbox_scale, checkbox_scale)
+	$ExportButton.get_font("font").size = 12 * global.scale
 	$ExportButton.rect_position.x = $LanguageLabel.rect_position.x
 	$ExportButton.rect_position.y = $AutosaveLabel.rect_position.y + $AutosaveLabel.rect_size.y + global.margin * global.scale
 	$ExportButton.rect_size = Vector2(0, 0)
 	col2x = max(col2x, $ExportButton.rect_size.x)
+	$ExportLineEdit.get_font("font").size = 11 * global.scale
 	$ExportLineEdit.rect_position.y = $ExportButton.rect_position.y
 	$ExportLineEdit.rect_size.x = 100 * global.scale
+	$ExportLineEdit.rect_size.y = 0
+	sizey = max($ExportButton.rect_size.y, $ExportLineEdit.rect_size.y)
+	$ExportButton.rect_size.y = sizey
+	$ExportLineEdit.rect_size.y = sizey
+	$ImportButton.get_font("font").size = 12 * global.scale
 	$ImportButton.rect_position.x = $LanguageLabel.rect_position.x
 	$ImportButton.rect_position.y = $ExportButton.rect_position.y + $ExportButton.rect_size.y + global.margin * global.scale
 	$ImportButton.rect_size = Vector2(0, 0)
 	col2x = max(col2x, $ImportButton.rect_size.x)
+	$ImportOptionButton.get_font("font").size = 12 * global.scale
 	$ImportOptionButton.rect_position.y = $ImportButton.rect_position.y
 	$ImportOptionButton.rect_size.x = 100 * global.scale
+	$ImportOptionButton.rect_size.y = 0
+	sizey = max($ImportButton.rect_size.y, $ImportOptionButton.rect_size.y)
+	$ImportButton.rect_size.y = sizey
+	$ImportOptionButton.rect_size.y = sizey
 	rect_size.x = col2x + 100 * global.scale + 12 * global.margin * global.scale
 	$LanguageOptionButton.rect_position.x = rect_size.x - $LanguageOptionButton.rect_size.x - global.margin * global.scale
-	$MarginSpinBox.rect_position.x = rect_size.x - $MarginSpinBox.rect_size.x - global.margin * global.scale
-	$ScaleSpinBox.rect_position.x = rect_size.x - $ScaleSpinBox.rect_size.x - global.margin * global.scale
-	$AutosaveCheckBox.rect_position.x = rect_size.x - $AutosaveCheckBox.rect_size.x - global.margin * global.scale
+	$MarginLineEdit.rect_position.x = rect_size.x - $MarginLineEdit.rect_size.x - global.margin * global.scale
+	$ScaleLineEdit.rect_position.x = rect_size.x - $ScaleLineEdit.rect_size.x - global.margin * global.scale
+	$AutosaveCheckBox.rect_position.x = rect_size.x - $AutosaveCheckBox.rect_size.x * checkbox_scale - global.margin * global.scale
 	$ExportLineEdit.rect_position.x = rect_size.x - $ExportLineEdit.rect_size.x - global.margin * global.scale
 	$ImportOptionButton.rect_position.x = rect_size.x - $ImportOptionButton.rect_size.x - global.margin * global.scale
+	$SaveButton.get_font("font").size = 12 * global.scale
+	$SaveButton.rect_size.y = 0
 	$SaveButton.rect_position.x = $LanguageLabel.rect_position.x
 	$SaveButton.rect_position.y = $ImportButton.rect_position.y + $ImportButton.rect_size.y + global.margin * global.scale
 	$SaveButton.rect_size.x = rect_size.x - 2 * global.margin * global.scale
@@ -93,6 +120,7 @@ func resize():
 	rect_size.y = $SaveButton.rect_position.y + $SaveButton.rect_size.y + global.margin * global.scale
 
 func update_ui():
+	$LanguageOptionButton.clear()
 	$LanguageOptionButton.add_item("Deutsch")
 	$LanguageOptionButton.add_item("English")
 	lang = global.locale
@@ -100,8 +128,8 @@ func update_ui():
 		$LanguageOptionButton.select(0)
 	else:
 		$LanguageOptionButton.select(1)
-	$MarginSpinBox.value = global.margin
-	$ScaleSpinBox.value = global.scale
+	$MarginLineEdit.text = str(global.margin)
+	$ScaleLineEdit.text = str(global.scale)
 	$AutosaveCheckBox.pressed = global.save_on_exit
 	update_imports()
 
@@ -133,8 +161,8 @@ func _on_ImportButton_pressed():
 
 func _on_SaveButton_pressed():
 	global.locale = lang
-	global.margin = $MarginSpinBox.value
-	global.scale = $ScaleSpinBox.value
+	global.margin = int($MarginLineEdit.text)
+	global.scale = float($ScaleLineEdit.text)
 	global.save_on_exit = $AutosaveCheckBox.pressed
 	global.write_config()
 	global.switch_locale()

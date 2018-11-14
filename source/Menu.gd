@@ -37,6 +37,7 @@ func switch_locale():
 	$Line1/D2CheckBox.hint_tooltip = TranslationServer.translate("SPHERE3_TOOLTIP")
 	$Line1/D3Value.hint_tooltip = TranslationServer.translate("SIZE4_TOOLTIP")
 	$Line1/D3CheckBox.hint_tooltip = TranslationServer.translate("SPHERE4_TOOLTIP")
+	$Line1/Value.hint_tooltip = TranslationServer.translate("MINES_TOOLTIP")
 	$Line2/Start.text = TranslationServer.translate("START")
 	$Line2/Start.hint_tooltip = TranslationServer.translate("START_TOOLTIP")
 	$Line2/GetStarted.hint_tooltip = TranslationServer.translate("NICE_TOOLTIP")
@@ -202,11 +203,10 @@ func resize():
 	$Line2/CheckBox.rect_scale = Vector2(checkbox_scale, checkbox_scale)
 	$Line2/CheckBox.rect_position.x = $Line2/Delta.position.x + $Line2/Delta.texture.get_size().x
 	
-	$Line2.rect_size.x = $Line2/CheckBox.rect_position.x + $Line2/CheckBox.rect_size.x
+	$Line2.rect_size.x = $Line2/CheckBox.rect_position.x + $Line2/CheckBox.rect_size.x * checkbox_scale
 	
-	rect_size.x = max($Line1.rect_size.x, $Line2.rect_size.x)
-	$Line1.rect_position.x = (rect_size.x - $Line1.rect_size.x) / 2
-	$Line2.rect_position.x = (rect_size.x - $Line2.rect_size.x) / 2
+	$Line1.rect_position.x = max(0, (OS.window_size.x - $Line1.rect_size.x) / 2)
+	$Line2.rect_position.x = max(0, (OS.window_size.x - $Line2.rect_size.x) / 2)
 	$Line1.rect_position.y = 0
 	$Line2.rect_position.y = $Line1.rect_position.y + $Line1.rect_size.y + global.margin * global.scale
 	
