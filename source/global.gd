@@ -1,6 +1,5 @@
 extends Node
 
-var inside = false
 var delta = true
 var dimensions = [[4, false], [4, false], [4, false], [4, false]]
 var mines = 10
@@ -14,11 +13,9 @@ var board_object = load("res://Board.tscn")
 var board
 var menu = load("res://Menu.tscn").instance()
 var margin = 5
-var position = [-1, -1, -1, -1]
 var remaining = 246
 var remaining_mines = 10
 var lost = false
-var input_state = "none" # in {"none", "lowlight this", "lowlight neighbors", "drag"}
 var board_height = 0
 var started = false
 var time_offset = 0
@@ -51,7 +48,6 @@ var right_image = Image.new()
 var super_down_image = Image.new()
 var super_right_image = Image.new()
 var exports = ProjectSettings.globalize_path("res://")
-var drag_start = []
 var resizing = false
 var changed = false
 var first_start = false
@@ -281,7 +277,8 @@ func read_config():
 			if configFile.has_section_key("Config", "o"):
 				margin = configFile.get_value("Config", "o")
 			if configFile.has_section_key("Config", "scale_factor"):
-				scale = configFile.get_value("Config", "scale_factor")
+				global.scale = configFile.get_value("Config", "scale_factor")
+				global.changed = true
 			if configFile.has_section_key("Config", "delta_box"):
 				delta = bool(configFile.get_value("Config", "delta_box"))
 			if configFile.has_section_key("Config", "minX"):
@@ -304,7 +301,7 @@ func write_config():
 	configFile.set_value("Config", "sphere", save_sphere)
 	configFile.set_value("Config", "mines", int(menu.get_node("Line1/Value").text))
 	configFile.set_value("Config", "o", margin)
-	configFile.set_value("Config", "scale_factor", scale)
+	configFile.set_value("Config", "scale_factor", global.scale)
 	configFile.set_value("Config", "delta_box", int(menu.get_node("Line2/CheckBox").pressed))
 	configFile.set_value("Config", "minX", minX)
 	configFile.set_value("Config", "minY", minY)
@@ -326,6 +323,9 @@ func calc_running_time():
 func _process(delta):
 	if changed && ! resizing:
 		changed = false
+		global.scale = global.scale * 10
+		global.scale = round(global.scale)
+		global.scale = global.scale / 10
 		global.scale = clamp(global.scale, 0.5, 4)
 		global.write_config()
 		settings_menu.update_ui()
@@ -376,84 +376,6 @@ func shift(from, to):
 					blocks[a][b][c][d].recalc_neighbors = true
 	board.resize()
 
-func switch_input_state(to, where):
-	if ! to == "drag":
-		if where.find(-1) == -1:
-			blocks[where[0]][where[1]][where[2]][where[3]].highlight(true)
-			for i in blocks[where[0]][where[1]][where[2]][where[3]].neighbors:
-				global.blocks[i[0]][i[1]][i[2]][i[3]].highlight(true)
-		if to == "none":
-			input_state = "none"
-			if where.find(-1) == -1:
-				blocks[where[0]][where[1]][where[2]][where[3]].lowlight(false)
-				for i in blocks[where[0]][where[1]][where[2]][where[3]].neighbors:
-					blocks[i[0]][i[1]][i[2]][i[3]].lowlight(false)
-		elif to == "lowlight this":
-			input_state = "lowlight this"
-			if where.find(-1) == -1:
-				blocks[where[0]][where[1]][where[2]][where[3]].lowlight(true)
-				for i in blocks[where[0]][where[1]][where[2]][where[3]].neighbors:
-					blocks[i[0]][i[1]][i[2]][i[3]].lowlight(false)
-		elif to == "lowlight neighbors":
-			input_state = "lowlight neighbors"
-			if where.find(-1) == -1:
-				blocks[where[0]][where[1]][where[2]][where[3]].lowlight(true)
-				for i in blocks[where[0]][where[1]][where[2]][where[3]].neighbors:
-					blocks[i[0]][i[1]][i[2]][i[3]].lowlight(true)
-	else:
-		input_state = "drag"
-		if where.find(-1) == -1:
-			blocks[where[0]][where[1]][where[2]][where[3]].highlight(false)
-			for i in blocks[where[0]][where[1]][where[2]][where[3]].neighbors:
-				global.blocks[i[0]][i[1]][i[2]][i[3]].highlight(false)
-		if ! drag_start == where:
-			global.shift(drag_start, where)
-
-func _input(event):
-	var local_position = position
-	if event is InputEventMouseButton && ! finished && inside && ! paused:
-		if input_state == "none" && event.pressed:
-			if event.button_index == 1:
-				switch_input_state("lowlight this", local_position)
-			elif event.button_index == 2:
-				switch_input_state("none", local_position)
-				if local_position.find(-1) == -1:
-					blocks[local_position[0]][local_position[1]][local_position[2]][local_position[3]].flagged()
-			elif event.button_index == 3 && position.find(-1) == -1:
-				drag_start = local_position
-				switch_input_state("drag", local_position)
-		elif input_state == "lowlight this":
-			if event.button_index == 1 && ! event.pressed:
-				switch_input_state("none", local_position)
-				if local_position.find(-1) == -1:
-					blocks[local_position[0]][local_position[1]][local_position[2]][local_position[3]].clicked()
-			elif event.button_index == 2 && event.pressed:
-				switch_input_state("lowlight neighbors", local_position)
-		elif input_state == "lowlight neighbors":
-			if event.button_index == 1 && ! event.pressed:
-				switch_input_state("none", local_position)
-				if local_position.find(-1) == -1:
-					blocks[local_position[0]][local_position[1]][local_position[2]][local_position[3]].uncover_neighbors()
-			elif event.button_index == 2 && ! event.pressed:
-				switch_input_state("lowlight this", local_position)
-		elif input_state == "drag" && event.button_index == 3 && ! event.pressed:
-			blocks[local_position[0]][local_position[1]][local_position[2]][local_position[3]].inside = false
-			position = [-1, -1, -1, -1]
-			switch_input_state("none", local_position)
-		if lost:
-			lose()
-		elif remaining == 0:
-			win()
-	if event is InputEventMouseButton && event.pressed && Input.is_key_pressed(OS.find_scancode_from_string("Control")):
-		if event.button_index == 4:
-			global.scale = global.scale + 0.1
-			changed = true
-		elif event.button_index == 5:
-			global.scale = global.scale - 0.1
-			changed = true
-		if changed:
-			global.scale = clamp(global.scale, 0.5, 4)
-
 func end():
 	set_running(false)
 	calc_running_time()
@@ -486,13 +408,10 @@ func clear_board():
 					blocks[a][b][c][d].queue_free()
 	board.queue_free()
 	blocks = []
-	inside = false
 	paused = false
 	finished = false
 	started = false
-	position = [-1, -1, -1, -1]
 	lost = false
-	input_state = "none"
 	running_time = 0
 	set_running(false)
 	menu._on_Pause_pressed()

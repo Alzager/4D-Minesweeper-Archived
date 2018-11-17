@@ -247,14 +247,12 @@ func _on_CheckBox_toggled(button_pressed):
 func _on_Start_pressed():
 	if ! global.paused:
 		_on_Pause_pressed()
-	global.switch_input_state("none", global.position)
 	global.newgame_menu.popup_centered()
 
 
 func _on_GetStarted_pressed():
 	if ! global.running && ! global.finished:
 		var found = false
-		global.switch_input_state("none", global.position)
 		for a in range(global.blocks.size()):
 			for b in range(global.blocks[0].size()):
 				for c in range(global.blocks[0][0].size()):
@@ -272,7 +270,6 @@ func _on_Pause_pressed():
 	if global.running:
 		global.paused = ! global.paused
 		if global.paused:
-			global.switch_input_state("none", global.position)
 			global.calc_running_time()
 			global.time_offset = global.running_time
 		else:
@@ -295,7 +292,6 @@ func _on_Pause_pressed():
 func _on_Settings_pressed():
 	if ! global.paused:
 		_on_Pause_pressed()
-	global.switch_input_state("none", global.position)
 	global.settings_menu.popup_centered()
 
 func update_remaining():

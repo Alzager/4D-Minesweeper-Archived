@@ -1,4 +1,4 @@
-extends Node2D
+extends Area2D
 
 var mine_texture = ImageTexture.new()
 var flag_texture = ImageTexture.new()
@@ -14,6 +14,7 @@ var style_background = StyleBoxFlat.new()
 var neighbors = []
 var inside = false
 var recalc_neighbors = true
+var _changed = false
 
 func _ready():
 	$Number.add_font_override("font", $Number.get_font("font").duplicate())
@@ -22,7 +23,39 @@ func _ready():
 	exited()
 	resize()
 
+func _process(delta):
+	if _changed:
+		redraw()
+
+func resize():
+	var block_size = int(30 * global.scale)
+	var border_size = ceil(global.scale)
+	var background_size = block_size - 2 * border_size
+	var mine_scale = background_size / global.mine_image.get_size().y
+	mine_texture.create_from_image(global.mine_image)
+	flag_texture.create_from_image(global.flag_image)
+	mine_texture.set_size_override(global.mine_image.get_size() * mine_scale)
+	flag_texture.set_size_override(global.flag_image.get_size() * mine_scale)
+	$Border.rect_size = Vector2(block_size, block_size)
+	$Background.rect_size = Vector2(background_size, background_size)
+	$Background.rect_position = Vector2(border_size, border_size)
+	$Number.get_font("font").size = 21 * global.scale
+	$Sprite.position = Vector2(border_size, border_size)
+	$Collision.shape.extents = $Border.rect_size / 2
+	$Collision.position = $Border.rect_position + $Collision.shape.extents
+	_changed = true
+
+func count():
+	if recalc_neighbors:
+		get_neighbors()
+	for i in neighbors:
+		if global.blocks[i[0]][i[1]][i[2]][i[3]].mine:
+			number = number + 1
+	delta_number = number
+	_changed = true
+
 func redraw():
+	_changed = false
 	if highlighted:
 		style_border.set_bg_color(Color(0, 1, 1))
 	else:
@@ -93,31 +126,6 @@ func redraw():
 	$Border.set('custom_styles/panel', style_border)
 	$Background.set('custom_styles/panel', style_background)
 
-func resize():
-	var block_size = int(30 * global.scale)
-	var border_size = ceil(global.scale)
-	var background_size = block_size - 2 * border_size
-	var mine_scale = background_size / global.mine_image.get_size().y
-	mine_texture.create_from_image(global.mine_image)
-	flag_texture.create_from_image(global.flag_image)
-	mine_texture.set_size_override(global.mine_image.get_size() * mine_scale)
-	flag_texture.set_size_override(global.flag_image.get_size() * mine_scale)
-	$Border.rect_size = Vector2(block_size, block_size)
-	$Background.rect_size = Vector2(background_size, background_size)
-	$Background.rect_position = Vector2(border_size, border_size)
-	$Number.get_font("font").size = 21 * global.scale
-	$Sprite.position = Vector2(border_size, border_size)
-	redraw()
-
-func count():
-	if recalc_neighbors:
-		get_neighbors()
-	for i in neighbors:
-		if global.blocks[i[0]][i[1]][i[2]][i[3]].mine:
-			number = number + 1
-	delta_number = number
-	redraw()
-
 func get_neighbors():
 	neighbors = []
 	var temp_list = []
@@ -141,33 +149,24 @@ func get_neighbors():
 			neighbors.append(i)
 	recalc_neighbors = false
 
-func _physics_process(delta):
-	if 0 <= $Border.get_local_mouse_position().x && 0 <= $Border.get_local_mouse_position().y && $Border.get_local_mouse_position().x <= $Border.rect_size.x && $Border.get_local_mouse_position().y <= $Border.rect_size.y && global.inside:
-		if ! inside && global.position.find(-1) > -1:
-			entered()
-	else:
-		if inside:
-			exited()
-
 func entered():
 	inside = true
 	if recalc_neighbors:
 		get_neighbors()
-	global.position = coordinates
-	global.switch_input_state(global.input_state, coordinates)
+	set_lights({highlight = true})
+	for i in neighbors:
+		global.blocks[i[0]][i[1]][i[2]][i[3]].set_lights({highlight = true})
 
 func exited():
 	inside = false
 	if recalc_neighbors:
 		get_neighbors()
-	highlight(false)
-	lowlight(false)
+	set_lights({highlight = false, lowlight = false})
 	for i in neighbors:
-		global.blocks[i[0]][i[1]][i[2]][i[3]].highlight(false)
-		global.blocks[i[0]][i[1]][i[2]][i[3]].lowlight(false)
-	global.position = [-1, -1, -1, -1]
+		global.blocks[i[0]][i[1]][i[2]][i[3]].set_lights({highlight = false, lowlight = false})
 
 func clicked():
+	var _temp_changed = false
 	if recalc_neighbors:
 		get_neighbors()
 	if state == "covered":
@@ -184,7 +183,8 @@ func clicked():
 					global.blocks[i[0]][i[1]][i[2]][i[3]].clicked()
 		if global.save_on_exit:
 			global.save_game()
-		redraw()
+		_temp_changed = true
+	_changed = _changed || _temp_changed
 
 func uncover_neighbors():
 	if recalc_neighbors:
@@ -194,6 +194,7 @@ func uncover_neighbors():
 			global.blocks[i[0]][i[1]][i[2]][i[3]].clicked()
 
 func flagged():
+	var _temp_changed = false
 	if recalc_neighbors:
 		get_neighbors()
 	if state == "covered":
@@ -204,7 +205,7 @@ func flagged():
 			global.blocks[i[0]][i[1]][i[2]][i[3]].change_delta(-1)
 		if global.save_on_exit:
 			global.save_game()
-		redraw()
+		_temp_changed = true
 	elif state == "flagged":
 		state = "covered"
 		global.remaining_mines = global.remaining_mines + 1
@@ -213,22 +214,27 @@ func flagged():
 			global.blocks[i[0]][i[1]][i[2]][i[3]].change_delta(1)
 		if global.save_on_exit:
 			global.save_game()
-		redraw()
+		_temp_changed = true
+	_changed = _changed || _temp_changed
 
-func lowlight(what):
-	if ! what == lowlighted:
-		lowlighted = what
-		redraw()
-
-func highlight(what):
-	if ! what == highlighted:
-		highlighted = what
-		redraw()
+func set_lights(options):
+	var _temp_changed = false
+	if options.has("highlight"):
+		if ! options.highlight == highlighted:
+			_temp_changed = true
+			highlighted = options.highlight
+	if options.has("lowlight"):
+		if ! options.lowlight == lowlighted:
+			_temp_changed = true
+			lowlighted = options.lowlight
+	_changed = _changed || _temp_changed
 
 func change_delta(how):
+	var _temp_changed = false
 	if how == 1:
 		delta_number = delta_number + 1
-		redraw()
+		_temp_changed = true
 	elif how == -1:
 		delta_number = delta_number - 1
-		redraw()
+		_temp_changed = true
+	_changed = _changed || _temp_changed
