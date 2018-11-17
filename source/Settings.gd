@@ -1,9 +1,9 @@
 extends WindowDialog
 
-var lang = ""
-var user_files = 0
-var import_path = ""
-var import_name = ""
+var _lang = ""
+var _user_files = 0
+var _import_game_path = ""
+var _import_name = ""
 
 func _ready():
 	switch_locale()
@@ -123,7 +123,7 @@ func update_ui():
 	$LanguageOptionButton.clear()
 	$LanguageOptionButton.add_item("Deutsch")
 	$LanguageOptionButton.add_item("English")
-	lang = global.locale
+	_lang = global.locale
 	if global.locale == "de":
 		$LanguageOptionButton.select(0)
 	else:
@@ -157,10 +157,10 @@ func _on_ExportLineEdit_text_changed(new_text = $ExportLineEdit.text):
 		$ExportButton.disabled = true
 
 func _on_ImportButton_pressed():
-	global.import_game(import_path, import_name)
+	global.import_game(_import_game_path, _import_name)
 
 func _on_SaveButton_pressed():
-	global.locale = lang
+	global.locale = _lang
 	global.margin = int($MarginLineEdit.text)
 	global.scale = float($ScaleLineEdit.text)
 	global.save_on_exit = $AutosaveCheckBox.pressed
@@ -169,22 +169,22 @@ func _on_SaveButton_pressed():
 
 func _on_LanguageOptionButton_item_selected(ID):
 	if $LanguageOptionButton.get_item_text(ID) == "Deutsch":
-		lang = "de"
+		_lang = "de"
 	elif $LanguageOptionButton.get_item_text(ID) == "English":
-		lang = "en"
+		_lang = "en"
 
 func _on_ImportOptionButton_item_selected(ID):
 	var selected = $ImportOptionButton.get_item_text(ID)
-	import_name = selected.left(selected.find("<") - 1)
-	if ID < user_files:
-		import_path = "user://" + import_name
+	_import_name = selected.left(selected.find("<") - 1)
+	if ID < _user_files:
+		_import_game_path = "user://" + _import_name
 	else:
-		import_path = global.exports + "exports/" + import_name
+		_import_game_path = global.exports + "exports/" + _import_name
 
 func update_imports():
 	$ImportOptionButton.clear()
 	var files = []
-	user_files = 0
+	_user_files = 0
 	var successes_file = File.new()
 	var successes = {}
 	if successes_file.open(global.successes_file_path, File.READ) == OK:
@@ -197,7 +197,7 @@ func update_imports():
 		if savegame.open("user://" + i, File.READ) == OK:
 			loaddict = parse_json(savegame.get_line())
 			if loaddict.has("size") && loaddict.has("mines_list") && loaddict.has("sphere"):
-				user_files += 1
+				_user_files += 1
 				if successes.has(i):
 					$ImportOptionButton.add_item(i + " <" + successes[i] + ">")
 				else:

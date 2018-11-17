@@ -15,7 +15,8 @@ func _input(event):
 			if colliders.size() > 0:
 				var block = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1)[0].collider
 				if ! block.coordinates == input._position:
-					global.blocks[input._position[0]][input._position[1]][input._position[2]][input._position[3]].exited()
+					if input._position.find(-1) == -1:
+						global.blocks[input._position[0]][input._position[1]][input._position[2]][input._position[3]].exited()
 					input._position = block.coordinates
 					block.entered()
 					input._switch_state(input._state, block.coordinates)
@@ -42,7 +43,6 @@ func _input(event):
 						elif event.button_index == 2 && ! event.pressed:
 							input._switch_state("lowlight this", block.coordinates)
 					elif input._state == "drag" && event.button_index == 3 && ! event.pressed:
-						block.inside = false
 						input._position = [-1, -1, -1, -1]
 						input._switch_state("none", block.coordinates)
 					if global.lost:
@@ -68,7 +68,7 @@ func _input(event):
 		if global.changed:
 			global.scale = clamp(global.scale, 0.5, 4)
 
-func _switch_state(to, where = input._position):
+func _switch_state(to, where):
 	if ! to == "drag":
 		if to == "none":
 			input._state = "none"

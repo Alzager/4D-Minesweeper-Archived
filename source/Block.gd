@@ -1,20 +1,19 @@
 extends Area2D
 
-var mine_texture = ImageTexture.new()
-var flag_texture = ImageTexture.new()
+var _mine_texture = ImageTexture.new()
+var _flag_texture = ImageTexture.new()
+var _style_border = StyleBoxFlat.new()
+var _style_background = StyleBoxFlat.new()
+var _highlighted = false
+var _lowlighted = false
+var _number = 0
+var _delta_number = _number
+var _changed = false
 var coordinates = [-1, -1, -1, -1]
 var mine = false
 var state = "covered" # in {"covered", "uncovered", "flagged"}
-var highlighted = false
-var lowlighted = false
-var number = 0
-var delta_number = number
-var style_border = StyleBoxFlat.new()
-var style_background = StyleBoxFlat.new()
 var neighbors = []
-var inside = false
 var recalc_neighbors = true
-var _changed = false
 
 func _ready():
 	$Number.add_font_override("font", $Number.get_font("font").duplicate())
@@ -32,10 +31,10 @@ func resize():
 	var border_size = ceil(global.scale)
 	var background_size = block_size - 2 * border_size
 	var mine_scale = background_size / global.mine_image.get_size().y
-	mine_texture.create_from_image(global.mine_image)
-	flag_texture.create_from_image(global.flag_image)
-	mine_texture.set_size_override(global.mine_image.get_size() * mine_scale)
-	flag_texture.set_size_override(global.flag_image.get_size() * mine_scale)
+	_mine_texture.create_from_image(global.mine_image)
+	_flag_texture.create_from_image(global.flag_image)
+	_mine_texture.set_size_override(global.mine_image.get_size() * mine_scale)
+	_flag_texture.set_size_override(global.flag_image.get_size() * mine_scale)
 	$Border.rect_size = Vector2(block_size, block_size)
 	$Background.rect_size = Vector2(background_size, background_size)
 	$Background.rect_position = Vector2(border_size, border_size)
@@ -50,20 +49,20 @@ func count():
 		get_neighbors()
 	for i in neighbors:
 		if global.blocks[i[0]][i[1]][i[2]][i[3]].mine:
-			number = number + 1
-	delta_number = number
+			_number = _number + 1
+	_delta_number = _number
 	_changed = true
 
 func redraw():
 	_changed = false
-	if highlighted:
-		style_border.set_bg_color(Color(0, 1, 1))
+	if _highlighted:
+		_style_border.set_bg_color(Color(0, 1, 1))
 	else:
-		style_border.set_bg_color(Color(0, 0, 0))
+		_style_border.set_bg_color(Color(0, 0, 0))
 	if global.delta:
-		$Number.text = str(delta_number)
+		$Number.text = str(_delta_number)
 	else:
-		$Number.text = str(number)
+		$Number.text = str(_number)
 	if int($Number.text) < -9:
 		$Number.get_font("font").size = 15 * global.scale
 	else:
@@ -73,58 +72,58 @@ func redraw():
 	if global.paused && ! global.finished:
 		$Number.visible = false
 		$Sprite.visible = false
-		style_background.set_bg_color(Color(0.1, 0.1, 0.1))
+		_style_background.set_bg_color(Color(0.1, 0.1, 0.1))
 	else:
 		if state == "covered":
 			if global.finished:
 				if mine:
 					$Number.visible = false
 					$Sprite.visible = true
-					$Sprite.set_texture(flag_texture)
-					$Sprite.set_texture(mine_texture)
-					style_background.set_bg_color(Color(0.5, 0.5, 0.5))
+					$Sprite.set_texture(_flag_texture)
+					$Sprite.set_texture(_mine_texture)
+					_style_background.set_bg_color(Color(0.5, 0.5, 0.5))
 				else:
 					$Number.visible = true
 					$Sprite.visible = false
 					if int($Number.text) >= 0:
-						style_background.set_bg_color(Color(0.5, 0.5 - int($Number.text) * 0.07, 0.5 - int($Number.text) * 0.07))
+						_style_background.set_bg_color(Color(0.5, 0.5 - int($Number.text) * 0.07, 0.5 - int($Number.text) * 0.07))
 					else:
-						style_background.set_bg_color(Color(0.5, 0, 0))
+						_style_background.set_bg_color(Color(0.5, 0, 0))
 			else:
 				$Number.visible = false
 				$Sprite.visible = false
-				if lowlighted:
-					style_background.set_bg_color(Color(0.2, 0.2, 0.2))
+				if _lowlighted:
+					_style_background.set_bg_color(Color(0.2, 0.2, 0.2))
 				else:
-					style_background.set_bg_color(Color(0.6, 0.6, 0.6))
+					_style_background.set_bg_color(Color(0.6, 0.6, 0.6))
 		elif state == "uncovered":
 			if mine:
 				$Number.visible = false
 				$Sprite.visible = true
-				$Sprite.set_texture(flag_texture)
-				$Sprite.set_texture(mine_texture)
-				style_background.set_bg_color(Color(1, 0, 0))
+				$Sprite.set_texture(_flag_texture)
+				$Sprite.set_texture(_mine_texture)
+				_style_background.set_bg_color(Color(1, 0, 0))
 			else:
 				$Number.visible = true
 				$Sprite.visible = false
 				if int($Number.text) >= 0:
-					style_background.set_bg_color(Color(1, 1 - int($Number.text) * 0.07, 1 - int($Number.text) * 0.07))
+					_style_background.set_bg_color(Color(1, 1 - int($Number.text) * 0.07, 1 - int($Number.text) * 0.07))
 				else:
-					style_background.set_bg_color(Color(1, 0, 0))
+					_style_background.set_bg_color(Color(1, 0, 0))
 		elif state == "flagged":
 			$Number.visible = false
 			$Sprite.visible = true
-			$Sprite.set_texture(mine_texture)
-			$Sprite.set_texture(flag_texture)
+			$Sprite.set_texture(_mine_texture)
+			$Sprite.set_texture(_flag_texture)
 			if global.finished:
 				if mine:
-					style_background.set_bg_color(Color(0, 1, 0))
+					_style_background.set_bg_color(Color(0, 1, 0))
 				else:
-					style_background.set_bg_color(Color(1, 0, 0))
+					_style_background.set_bg_color(Color(1, 0, 0))
 			else:
-				style_background.set_bg_color(Color(1, 1, 1))
-	$Border.set('custom_styles/panel', style_border)
-	$Background.set('custom_styles/panel', style_background)
+				_style_background.set_bg_color(Color(1, 1, 1))
+	$Border.set('custom_styles/panel', _style_border)
+	$Background.set('custom_styles/panel', _style_background)
 
 func get_neighbors():
 	neighbors = []
@@ -150,7 +149,6 @@ func get_neighbors():
 	recalc_neighbors = false
 
 func entered():
-	inside = true
 	if recalc_neighbors:
 		get_neighbors()
 	set_lights({highlight = true})
@@ -158,7 +156,6 @@ func entered():
 		global.blocks[i[0]][i[1]][i[2]][i[3]].set_lights({highlight = true})
 
 func exited():
-	inside = false
 	if recalc_neighbors:
 		get_neighbors()
 	set_lights({highlight = false, lowlight = false})
@@ -189,7 +186,7 @@ func clicked():
 func uncover_neighbors():
 	if recalc_neighbors:
 		get_neighbors()
-	if state == "uncovered" && delta_number == 0:
+	if state == "uncovered" && _delta_number == 0:
 		for i in neighbors:
 			global.blocks[i[0]][i[1]][i[2]][i[3]].clicked()
 
@@ -220,21 +217,21 @@ func flagged():
 func set_lights(options):
 	var _temp_changed = false
 	if options.has("highlight"):
-		if ! options.highlight == highlighted:
+		if ! options.highlight == _highlighted:
 			_temp_changed = true
-			highlighted = options.highlight
+			_highlighted = options.highlight
 	if options.has("lowlight"):
-		if ! options.lowlight == lowlighted:
+		if ! options.lowlight == _lowlighted:
 			_temp_changed = true
-			lowlighted = options.lowlight
+			_lowlighted = options.lowlight
 	_changed = _changed || _temp_changed
 
 func change_delta(how):
 	var _temp_changed = false
 	if how == 1:
-		delta_number = delta_number + 1
+		_delta_number = _delta_number + 1
 		_temp_changed = true
 	elif how == -1:
-		delta_number = delta_number - 1
+		_delta_number = _delta_number - 1
 		_temp_changed = true
 	_changed = _changed || _temp_changed
