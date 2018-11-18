@@ -233,7 +233,6 @@ func add_win():
 	successes_file.close()
 
 func import_game(path, _import_name):
-	print(_import_name)
 	if ! _import_name == "":
 		clear_board()
 		var mines_list = []
