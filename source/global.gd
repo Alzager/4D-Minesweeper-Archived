@@ -323,10 +323,7 @@ func calc_running_time():
 func _process(delta):
 	if changed && ! resizing:
 		changed = false
-		global.scale = global.scale * 10
-		global.scale = round(global.scale)
-		global.scale = global.scale / 10
-		global.scale = clamp(global.scale, 0.5, 4)
+		global.scale = clamp(round(global.scale * 10) / 10, 0.5, 4)
 		global.write_config()
 		settings_menu.update_ui()
 		global.resize()
