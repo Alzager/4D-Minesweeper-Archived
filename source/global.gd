@@ -76,10 +76,10 @@ func resize():
 		winsizeX = OS.window_size.x
 		winsizeY = OS.window_size.y
 		var configFile = ConfigFile.new()
-		configFile.load(config)
-		configFile.set_value("Config", "winsizeX", winsizeX)
-		configFile.set_value("Config", "winsizeY", winsizeY)
-		configFile.save(config)
+		if configFile.load(config) == OK:
+			configFile.set_value("Config", "winsizeX", winsizeX)
+			configFile.set_value("Config", "winsizeY", winsizeY)
+			configFile.save(config)
 		for node in get_tree().get_nodes_in_group("resizable"):
 			node.resize()
 		reposition()
@@ -272,8 +272,7 @@ func _ready():
 	super_down_image = get_tree().get_root().get_node("Main").get_node("SuperDown").texture.get_data()
 	super_right_image = get_tree().get_root().get_node("Main").get_node("SuperRight").texture.get_data()
 	read_config()
-	OS.window_size.x = winsizeX
-	OS.window_size.y = winsizeY
+	OS.window_size = Vector2(winsizeX, winsizeY)
 	if OS.get_name() == "OSX":
 		exports = ProjectSettings.globalize_path("res://") + "../../../"
 	get_tree().get_root().connect("size_changed", self, "resize")

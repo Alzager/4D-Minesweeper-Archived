@@ -52,6 +52,7 @@ func switch_locale():
 	$Line2/Settings.text = TranslationServer.translate("SETTINGS")
 	$Line2/Settings.hint_tooltip = TranslationServer.translate("SETTINGS_TOOLTIP")
 	$Line2/CheckBox.hint_tooltip = TranslationServer.translate("DELTA_TOOLTIP")
+	$Paused.text = TranslationServer.translate("PAUSED")
 
 func resize():
 	var L2y = 0
@@ -211,6 +212,11 @@ func resize():
 	$Line2.rect_position.y = $Line1.rect_position.y + $Line1.rect_size.y + global.margin * global.scale
 	
 	rect_size.y = $Line2.rect_position.y + $Line2.rect_size.y
+	
+	$Paused.get_font("font").size = 50 * global.scale
+	$Paused.rect_size = Vector2(0, 0)
+	$Paused.rect_position.x = max(0, (OS.window_size.x - $Paused.rect_size.x) / 2)
+	$Paused.rect_position.y = rect_size.y
 	global.reposition()
 
 func get_settigs():
@@ -290,6 +296,7 @@ func _on_Pause_pressed():
 	else:
 		$Line2/Pause.text = TranslationServer.translate("PAUSE")
 		$Line2/Pause.hint_tooltip = TranslationServer.translate("PAUSE_TOOLTIP")
+	$Paused.visible = global.paused
 
 
 func _on_Settings_pressed():
