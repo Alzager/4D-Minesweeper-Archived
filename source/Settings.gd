@@ -175,11 +175,17 @@ func _on_LanguageOptionButton_item_selected(ID):
 
 func _on_ImportOptionButton_item_selected(ID):
 	var selected = $ImportOptionButton.get_item_text(ID)
-	_import_name = selected.left(selected.find("<") - 1)
+	_import_name = selected
+	if _import_name.find("<") > -1:
+		_import_name = _import_name.left(_import_name.find("<") - 1)
 	if ID < _user_files:
 		_import_game_path = "user://" + _import_name
-	else:
+		$ImportButton.disabled = false
+	elif ID > _user_files:
 		_import_game_path = global.exports + "exports/" + _import_name
+		$ImportButton.disabled = false
+	else:
+		$ImportButton.disabled = true
 
 func update_imports():
 	$ImportOptionButton.clear()

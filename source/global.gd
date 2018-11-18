@@ -232,35 +232,37 @@ func add_win():
 	successes_file.store_line(to_json(successes))
 	successes_file.close()
 
-func import_game(path, name):
-	clear_board()
-	var mines_list = []
-	var loaddict = {}
-	var savegame = File.new()
-	savegame.open(path, File.READ)
-	loaddict = parse_json(savegame.get_line())
-	savegame.close()
-	set_running(false)
-	finished = false
-	paused = false
-	menu._on_Pause_pressed()
-	dimensions = [[int(loaddict["size"][0]), bool(loaddict["sphere"][0])], [int(loaddict["size"][1]), bool(loaddict["sphere"][1])], [int(loaddict["size"][2]), bool(loaddict["sphere"][2])], [int(loaddict["size"][3]), bool(loaddict["sphere"][3])]]
-	mines_list = loaddict["mines_list"]
-	mines = int(mines_list.size())
-	sanitize_settings()
-	menu.set_settigs()
-	game_id = name
-	initialize_blocks()
-	for i in mines_list:
-		global.blocks[i[0]][i[1]][i[2]][i[3]].mine = true
-	count()
-	board = board_object.instance()
-	board.initialize()
-	get_tree().get_root().call_deferred("add_child", board)
-	global.message_menu.window_title = TranslationServer.translate("IMPORT_TITLE")
-	global.message_menu.get_node("Label").text = TranslationServer.translate("IMPORT_CONFIRMATION")
-	global.message_menu.resize()
-	global.message_menu.popup_centered()
+func import_game(path, _import_name):
+	print(_import_name)
+	if ! _import_name == "":
+		clear_board()
+		var mines_list = []
+		var loaddict = {}
+		var savegame = File.new()
+		savegame.open(path, File.READ)
+		loaddict = parse_json(savegame.get_line())
+		savegame.close()
+		set_running(false)
+		finished = false
+		paused = false
+		menu._on_Pause_pressed()
+		dimensions = [[int(loaddict["size"][0]), bool(loaddict["sphere"][0])], [int(loaddict["size"][1]), bool(loaddict["sphere"][1])], [int(loaddict["size"][2]), bool(loaddict["sphere"][2])], [int(loaddict["size"][3]), bool(loaddict["sphere"][3])]]
+		mines_list = loaddict["mines_list"]
+		mines = int(mines_list.size())
+		sanitize_settings()
+		menu.set_settigs()
+		game_id = _import_name
+		initialize_blocks()
+		for i in mines_list:
+			global.blocks[i[0]][i[1]][i[2]][i[3]].mine = true
+		count()
+		board = board_object.instance()
+		board.initialize()
+		get_tree().get_root().call_deferred("add_child", board)
+		global.message_menu.window_title = TranslationServer.translate("IMPORT_TITLE")
+		global.message_menu.get_node("Label").text = TranslationServer.translate("IMPORT_CONFIRMATION")
+		global.message_menu.resize()
+		global.message_menu.popup_centered()
 
 func _ready():
 	delta_image = get_tree().get_root().get_node("Main").get_node("Delta").texture.get_data()
