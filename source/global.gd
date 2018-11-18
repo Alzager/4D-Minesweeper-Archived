@@ -77,6 +77,7 @@ func resize():
 		winsizeY = OS.window_size.y
 		var configFile = ConfigFile.new()
 		if configFile.load(config) == OK:
+			configFile.set_value("Config", "scale_factor", global.scale)
 			configFile.set_value("Config", "winsizeX", winsizeX)
 			configFile.set_value("Config", "winsizeY", winsizeY)
 			configFile.save(config)
