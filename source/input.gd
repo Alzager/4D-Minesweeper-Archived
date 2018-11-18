@@ -5,7 +5,7 @@ var _state = "none" # in {"none", "lowlight this", "lowlight neighbors", "drag"}
 var _drag_start = []
 
 func _input(event):
-	var _inside = ! global.settings_menu.is_visible_in_tree() && ! global.newgame_menu.is_visible_in_tree() && ! global.win_menu.is_visible_in_tree() && ! global.lose_menu.is_visible_in_tree() && ! global.sorry_menu.is_visible_in_tree()
+	var _inside = ! global.settings_menu.is_visible_in_tree() && ! global.newgame_menu.is_visible_in_tree() && ! global.win_menu.is_visible_in_tree() && ! global.lose_menu.is_visible_in_tree() && ! global.message_menu.is_visible_in_tree()
 	if _inside:
 		var space_state = get_tree().get_root().get_world_2d().direct_space_state
 		var colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 2)

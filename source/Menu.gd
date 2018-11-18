@@ -263,7 +263,10 @@ func _on_GetStarted_pressed():
 		if global.remaining == 0:
 			global.win()
 		if ! found:
-			global.sorry_menu.popup_centered()
+			global.message_menu.window_title = TranslationServer.translate("SORRY_TITLE")
+			global.message_menu.get_node("Label").text = TranslationServer.translate("SORRY")
+			global.message_menu.resize()
+			global.message_menu.popup_centered()
 
 
 func _on_Pause_pressed():

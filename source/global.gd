@@ -34,8 +34,8 @@ var lose = preload("res://Lose.tscn")
 var lose_menu = lose.instance()
 var win = preload("res://Win.tscn")
 var win_menu = win.instance()
-var sorry = preload("res://Sorry.tscn")
-var sorry_menu = sorry.instance()
+var message = preload("res://Message.tscn")
+var message_menu = message.instance()
 var successes_file_path = "user://successes"
 var game_id = ""
 var savefile = "user://save.sav"
@@ -183,6 +183,15 @@ func export_game(name):
 		settings_menu.update_imports()
 		settings_menu._on_ExportLineEdit_text_changed()
 		win_menu._on_ExportLineEdit_text_changed()
+		global.message_menu.window_title = TranslationServer.translate("EXPORT_TITLE")
+		global.message_menu.get_node("Label").text = TranslationServer.translate("EXPORT_CONFIRMATION")
+		global.message_menu.resize()
+		global.message_menu.popup_centered()
+	else:
+		global.message_menu.window_title = TranslationServer.translate("EXPORT_FAILED_TITLE")
+		global.message_menu.get_node("Label").text = TranslationServer.translate("EXPORT_FAILED_CONFIRMATION")
+		global.message_menu.resize()
+		global.message_menu.popup_centered()
 
 func add_win():
 	var successes_file = File.new()
@@ -233,6 +242,10 @@ func import_game(path, name):
 	board = board_object.instance()
 	board.initialize()
 	get_tree().get_root().call_deferred("add_child", board)
+	global.message_menu.window_title = TranslationServer.translate("IMPORT_TITLE")
+	global.message_menu.get_node("Label").text = TranslationServer.translate("IMPORT_CONFIRMATION")
+	global.message_menu.resize()
+	global.message_menu.popup_centered()
 
 func _ready():
 	delta_image = get_tree().get_root().get_node("Main").get_node("Delta").texture.get_data()
@@ -252,7 +265,7 @@ func _ready():
 	get_tree().get_root().call_deferred("add_child", newgame_menu)
 	get_tree().get_root().call_deferred("add_child", lose_menu)
 	get_tree().get_root().call_deferred("add_child", win_menu)
-	get_tree().get_root().call_deferred("add_child", sorry_menu)
+	get_tree().get_root().call_deferred("add_child", message_menu)
 	settings_menu.update_ui()
 	var savegame = File.new()
 	if savegame.file_exists(savefile) && save_on_exit:

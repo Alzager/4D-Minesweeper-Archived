@@ -1,14 +1,8 @@
 extends WindowDialog
 
 func _ready():
-	switch_locale()
 	resize()
-	add_to_group("translations")
 	add_to_group("resizable")
-
-func switch_locale():
-	window_title = TranslationServer.translate("SORRY_TITLE")
-	$Label.text = TranslationServer.translate("SORRY")
 
 func resize():
 	$Label.get_font("font").size = 16 * global.scale

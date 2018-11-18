@@ -6,12 +6,12 @@ var _style_border = StyleBoxFlat.new()
 var _style_background = StyleBoxFlat.new()
 var _highlighted = false
 var _lowlighted = false
-var _number = 0
-var _delta_number = _number
+var _delta_number = number
 var _changed = false
 var coordinates = [-1, -1, -1, -1]
 var mine = false
 var state = "covered" # in {"covered", "uncovered", "flagged"}
+var number = 0
 var neighbors = []
 var recalc_neighbors = true
 
@@ -49,8 +49,8 @@ func count():
 		get_neighbors()
 	for i in neighbors:
 		if global.blocks[i[0]][i[1]][i[2]][i[3]].mine:
-			_number = _number + 1
-	_delta_number = _number
+			number = number + 1
+	_delta_number = number
 	_changed = true
 
 func redraw():
@@ -62,7 +62,7 @@ func redraw():
 	if global.delta:
 		$Number.text = str(_delta_number)
 	else:
-		$Number.text = str(_number)
+		$Number.text = str(number)
 	if int($Number.text) < -9:
 		$Number.get_font("font").size = 15 * global.scale
 	else:

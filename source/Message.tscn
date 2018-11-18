@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Sorry.gd" type="Script" id=1]
+[ext_resource path="res://Message.gd" type="Script" id=1]
 [ext_resource path="res://Monda-Bold.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="DynamicFont" id=1]
@@ -11,7 +11,7 @@ use_filter = false
 font_data = ExtResource( 2 )
 _sections_unfolded = [ "Font" ]
 
-[node name="Sorry" type="WindowDialog"]
+[node name="Sorry" type="WindowDialog" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
