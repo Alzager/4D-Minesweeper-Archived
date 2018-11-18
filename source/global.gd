@@ -24,6 +24,8 @@ var starting_time = 0
 var config = "user://config.cfg"
 var minX = 600
 var minY = 600
+var winsizeX = 600
+var winsizeY = 600
 var save_on_exit = true
 var locale = "en"
 var settings = preload("res://Settings.tscn")
@@ -61,10 +63,23 @@ func switch_locale():
 func resize():
 	if ! resizing:
 		resizing = true
-		if OS.window_size.x < minX:
-			OS.window_size.x = minX
-		if OS.window_size.y < minY:
-			OS.window_size.y = minY
+		var _temp_size = OS.window_size
+		var _changed = false
+		if _temp_size.x < minX:
+			_temp_size.x = minX
+			_changed = true
+		if _temp_size.y < minY:
+			_temp_size.y = minY
+			_changed = true
+		if _changed:
+			OS.window_size = _temp_size
+		winsizeX = OS.window_size.x
+		winsizeY = OS.window_size.y
+		var configFile = ConfigFile.new()
+		configFile.load(config)
+		configFile.set_value("Config", "winsizeX", winsizeX)
+		configFile.set_value("Config", "winsizeY", winsizeY)
+		configFile.save(config)
 		for node in get_tree().get_nodes_in_group("resizable"):
 			node.resize()
 		reposition()
@@ -257,6 +272,8 @@ func _ready():
 	super_down_image = get_tree().get_root().get_node("Main").get_node("SuperDown").texture.get_data()
 	super_right_image = get_tree().get_root().get_node("Main").get_node("SuperRight").texture.get_data()
 	read_config()
+	OS.window_size.x = winsizeX
+	OS.window_size.y = winsizeY
 	if OS.get_name() == "OSX":
 		exports = ProjectSettings.globalize_path("res://") + "../../../"
 	get_tree().get_root().connect("size_changed", self, "resize")
@@ -294,14 +311,14 @@ func read_config():
 				global.changed = true
 			if configFile.has_section_key("Config", "delta_box"):
 				delta = bool(configFile.get_value("Config", "delta_box"))
-			if configFile.has_section_key("Config", "minX"):
-				minX = configFile.get_value("Config", "minX")
-			if configFile.has_section_key("Config", "minY"):
-				minY = configFile.get_value("Config", "minY")
 			if configFile.has_section_key("Config", "save_on_exit"):
 				save_on_exit = bool(configFile.get_value("Config", "save_on_exit"))
 			if configFile.has_section_key("Config", "locale"):
 				locale = configFile.get_value("Config", "locale")
+			if configFile.has_section_key("Config", "winsizeX"):
+				winsizeX = configFile.get_value("Config", "winsizeX")
+			if configFile.has_section_key("Config", "winsizeY"):
+				winsizeY = configFile.get_value("Config", "winsizeY")
 	else:
 		first_start = true
 	menu.set_settigs()
@@ -320,6 +337,8 @@ func write_config():
 	configFile.set_value("Config", "minY", minY)
 	configFile.set_value("Config", "save_on_exit", int(save_on_exit))
 	configFile.set_value("Config", "locale", locale)
+	configFile.set_value("Config", "winsizeX", winsizeX)
+	configFile.set_value("Config", "winsizeY", winsizeY)
 	configFile.save(config)
 
 func _notification(what):
