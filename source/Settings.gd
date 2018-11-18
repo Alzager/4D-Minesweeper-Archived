@@ -209,8 +209,9 @@ func update_imports():
 				else:
 					$ImportOptionButton.add_item(i)
 		savegame.close()
+	if ! _user_files == 0:
+		$ImportOptionButton.add_separator()
 	files = global.read_game_files()
-	$ImportOptionButton.add_separator()
 	for i in files:
 		var loaddict = {}
 		var savegame = File.new()
