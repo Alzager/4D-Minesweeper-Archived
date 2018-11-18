@@ -6,6 +6,7 @@ var _import_game_path = ""
 var _import_name = ""
 
 func _ready():
+	$ImportButton.disabled = true
 	switch_locale()
 	resize()
 	add_to_group("translations")
