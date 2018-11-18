@@ -223,8 +223,9 @@ func update_imports():
 				else:
 					$ImportOptionButton.add_item(i)
 		savegame.close()
-	$ImportOptionButton.select(0)
-	_on_ImportOptionButton_item_selected(0)
+	if $ImportOptionButton.get_item_count() > 0:
+		$ImportOptionButton.select(0)
+		_on_ImportOptionButton_item_selected(0)
 	resize()
 
 func _on_Settings_item_rect_changed():

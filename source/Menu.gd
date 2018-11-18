@@ -9,6 +9,7 @@ var _super_down_texture = ImageTexture.new()
 var _super_right_texture = ImageTexture.new()
 
 func _ready():
+	$Paused.visible = global.paused
 	switch_locale()
 	resize()
 	add_to_group("translations")
