@@ -23,4 +23,5 @@ func _on_focus_entered():
 	select_all()
 
 func _on_focus_exited():
+	text = str(max(int(text), 1))
 	deselect()

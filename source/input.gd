@@ -68,6 +68,32 @@ func _input(event):
 		if global.changed:
 			global.scale = clamp(global.scale, 0.5, 4)
 
+func _physics_process(delta):
+	var _inside = ! global.settings_menu.is_visible_in_tree() && ! global.newgame_menu.is_visible_in_tree() && ! global.win_menu.is_visible_in_tree() && ! global.lose_menu.is_visible_in_tree() && ! global.message_menu.is_visible_in_tree()
+	if _inside:
+		var space_state = get_tree().get_root().get_world_2d().direct_space_state
+		var colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 2)
+		_inside = colliders.size() > 0
+		if _inside:
+			colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1)
+			if colliders.size() > 0:
+				var block = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1)[0].collider
+				if ! block.coordinates == input._position:
+					if input._position.find(-1) == -1:
+						global.blocks[input._position[0]][input._position[1]][input._position[2]][input._position[3]].exited()
+					input._position = block.coordinates
+					block.entered()
+					input._switch_state(input._state, block.coordinates)
+			else:
+				if input._position.find(-1) == -1:
+					global.blocks[input._position[0]][input._position[1]][input._position[2]][input._position[3]].exited()
+					input._position = [-1, -1, -1, -1]
+	if ! _inside:
+		input._switch_state("none", input._position)
+		if input._position.find(-1) == -1:
+			global.blocks[input._position[0]][input._position[1]][input._position[2]][input._position[3]].exited()
+			input._position = [-1, -1, -1, -1]
+
 func _switch_state(to, where):
 	if ! to == "drag":
 		if to == "none":
