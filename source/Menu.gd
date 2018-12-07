@@ -290,7 +290,7 @@ func _on_Pause_pressed():
 		for b in range(global.blocks[0].size()):
 			for c in range(global.blocks[0][0].size()):
 				for d in range(global.blocks[0][0][0].size()):
-					global.blocks[a][b][c][d].redraw()
+					global.blocks[a][b][c][d]._changed = true
 	if global.paused:
 		$Line2/Pause.text = TranslationServer.translate("RESUME")
 		$Line2/Pause.hint_tooltip = TranslationServer.translate("RESUME_TOOLTIP")

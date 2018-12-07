@@ -416,7 +416,7 @@ func end():
 		for b in range(global.blocks[0].size()):
 			for c in range(global.blocks[0][0].size()):
 				for d in range(global.blocks[0][0][0].size()):
-					blocks[a][b][c][d].redraw()
+					blocks[a][b][c][d]._changed = true
 
 func lose():
 	end()

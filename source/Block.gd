@@ -8,6 +8,7 @@ var _highlighted = false
 var _lowlighted = false
 var _delta_number = number
 var _changed = false
+var _color_step_size = 20
 var coordinates = [-1, -1, -1, -1]
 var mine = false
 var state = "covered" # in {"covered", "uncovered", "flagged"}
@@ -24,7 +25,96 @@ func _ready():
 
 func _process(delta):
 	if _changed:
-		redraw()
+		_changed = false
+		var _temp_changed = false
+		var _target_background = Color(0.1, 0.1, 0.1)
+		if _highlighted && $Border.modulate.g < 1:
+			$Border.modulate = Color(0, clamp($Border.modulate.g + _color_step_size * delta, 0, 1), clamp($Border.modulate.b + _color_step_size * delta, 0, 1))
+			_temp_changed = _temp_changed || $Border.modulate.g < 1
+		elif ! _highlighted && $Border.modulate.g > 0:
+			$Border.modulate = Color(0, clamp($Border.modulate.g - _color_step_size * delta, 0, 1), clamp($Border.modulate.b - _color_step_size * delta, 0, 1))
+			_temp_changed = _temp_changed || $Border.modulate.g > 0
+		if global.delta:
+			$Number.text = str(_delta_number)
+		else:
+			$Number.text = str(number)
+		if int($Number.text) < -9:
+			$Number.get_font("font").size = 15 * global.scale
+		else:
+			$Number.get_font("font").size = 21 * global.scale
+		$Number.rect_size = Vector2(0, 0)
+		$Number.rect_position = $Border.rect_size / 2 - $Number.rect_size / 2
+		if global.paused && ! global.finished:
+			$Number.visible = false
+			$Sprite.visible = false
+		else:
+			if state == "covered":
+				if global.finished:
+					if mine:
+						$Number.visible = false
+						$Sprite.visible = true
+						$Sprite.set_texture(_flag_texture)
+						$Sprite.set_texture(_mine_texture)
+						_target_background = Color(0.5, 0.5, 0.5)
+					else:
+						$Number.visible = true
+						$Sprite.visible = false
+						if int($Number.text) >= 0:
+							_target_background = Color(0.5, 0.5 - int($Number.text) * 0.07, 0.5 - int($Number.text) * 0.07)
+						else:
+							_target_background = Color(0.5, 0, 0)
+				else:
+					$Number.visible = false
+					$Sprite.visible = false
+					if _lowlighted:
+						_target_background = Color(0.2, 0.2, 0.2)
+					else:
+						_target_background = Color(0.6, 0.6, 0.6)
+			elif state == "uncovered":
+				if mine:
+					$Number.visible = false
+					$Sprite.visible = true
+					$Sprite.set_texture(_flag_texture)
+					$Sprite.set_texture(_mine_texture)
+					_target_background = Color(1, 0, 0)
+				else:
+					$Number.visible = true
+					$Sprite.visible = false
+					if int($Number.text) >= 0:
+						_target_background = Color(1, 1 - int($Number.text) * 0.07, 1 - int($Number.text) * 0.07)
+					else:
+						_target_background = Color(1, 0, 0)
+			elif state == "flagged":
+				$Number.visible = false
+				$Sprite.visible = true
+				$Sprite.set_texture(_mine_texture)
+				$Sprite.set_texture(_flag_texture)
+				if global.finished:
+					if mine:
+						_target_background = Color(0, 1, 0)
+					else:
+						_target_background = Color(1, 0, 0)
+				else:
+					_target_background = Color(1, 1, 1)
+		if $Background.modulate.r > _target_background.r:
+			$Background.modulate.r = clamp($Background.modulate.r - delta, _target_background.r, 1)
+			_temp_changed = _temp_changed || ! $Background.modulate.r == _target_background.r
+		elif $Background.modulate.r < _target_background.r:
+			$Background.modulate.r = clamp($Background.modulate.r + delta, 0, _target_background.r)
+			_temp_changed = _temp_changed || ! $Background.modulate.r == _target_background.r
+		if $Background.modulate.g > _target_background.g:
+			$Background.modulate.g = clamp($Background.modulate.g - delta, _target_background.g, 1)
+			_temp_changed = _temp_changed || ! $Background.modulate.g == _target_background.g
+		elif $Background.modulate.g < _target_background.g:
+			$Background.modulate.g = clamp($Background.modulate.g + delta, 0, _target_background.g)
+			_temp_changed = _temp_changed || ! $Background.modulate.g == _target_background.g
+		if $Background.modulate.b > _target_background.b:
+			$Background.modulate.b = clamp($Background.modulate.b - delta, _target_background.b, 1)
+			_temp_changed = _temp_changed || ! $Background.modulate.b == _target_background.b
+		elif $Background.modulate.b < _target_background.b:
+			$Background.modulate.b = clamp($Background.modulate.b + delta, 0, _target_background.b)
+			_temp_changed = _temp_changed || ! $Background.modulate.b == _target_background.b
+		_changed = _changed || _temp_changed
 
 func resize():
 	var block_size = int(30 * global.scale)
@@ -52,78 +142,6 @@ func count():
 			number = number + 1
 	_delta_number = number
 	_changed = true
-
-func redraw():
-	_changed = false
-	if _highlighted:
-		_style_border.set_bg_color(Color(0, 1, 1))
-	else:
-		_style_border.set_bg_color(Color(0, 0, 0))
-	if global.delta:
-		$Number.text = str(_delta_number)
-	else:
-		$Number.text = str(number)
-	if int($Number.text) < -9:
-		$Number.get_font("font").size = 15 * global.scale
-	else:
-		$Number.get_font("font").size = 21 * global.scale
-	$Number.rect_size = Vector2(0, 0)
-	$Number.rect_position = $Border.rect_size / 2 - $Number.rect_size / 2
-	if global.paused && ! global.finished:
-		$Number.visible = false
-		$Sprite.visible = false
-		_style_background.set_bg_color(Color(0.1, 0.1, 0.1))
-	else:
-		if state == "covered":
-			if global.finished:
-				if mine:
-					$Number.visible = false
-					$Sprite.visible = true
-					$Sprite.set_texture(_flag_texture)
-					$Sprite.set_texture(_mine_texture)
-					_style_background.set_bg_color(Color(0.5, 0.5, 0.5))
-				else:
-					$Number.visible = true
-					$Sprite.visible = false
-					if int($Number.text) >= 0:
-						_style_background.set_bg_color(Color(0.5, 0.5 - int($Number.text) * 0.07, 0.5 - int($Number.text) * 0.07))
-					else:
-						_style_background.set_bg_color(Color(0.5, 0, 0))
-			else:
-				$Number.visible = false
-				$Sprite.visible = false
-				if _lowlighted:
-					_style_background.set_bg_color(Color(0.2, 0.2, 0.2))
-				else:
-					_style_background.set_bg_color(Color(0.6, 0.6, 0.6))
-		elif state == "uncovered":
-			if mine:
-				$Number.visible = false
-				$Sprite.visible = true
-				$Sprite.set_texture(_flag_texture)
-				$Sprite.set_texture(_mine_texture)
-				_style_background.set_bg_color(Color(1, 0, 0))
-			else:
-				$Number.visible = true
-				$Sprite.visible = false
-				if int($Number.text) >= 0:
-					_style_background.set_bg_color(Color(1, 1 - int($Number.text) * 0.07, 1 - int($Number.text) * 0.07))
-				else:
-					_style_background.set_bg_color(Color(1, 0, 0))
-		elif state == "flagged":
-			$Number.visible = false
-			$Sprite.visible = true
-			$Sprite.set_texture(_mine_texture)
-			$Sprite.set_texture(_flag_texture)
-			if global.finished:
-				if mine:
-					_style_background.set_bg_color(Color(0, 1, 0))
-				else:
-					_style_background.set_bg_color(Color(1, 0, 0))
-			else:
-				_style_background.set_bg_color(Color(1, 1, 1))
-	$Border.set('custom_styles/panel', _style_border)
-	$Background.set('custom_styles/panel', _style_background)
 
 func get_neighbors():
 	neighbors = []
