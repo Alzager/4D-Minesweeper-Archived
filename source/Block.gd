@@ -8,7 +8,7 @@ var _highlighted = false
 var _lowlighted = false
 var _delta_number = number
 var _changed = false
-var _color_step_size = 20
+var _color_step_size = 5
 var coordinates = [-1, -1, -1, -1]
 var mine = false
 var state = "covered" # in {"covered", "uncovered", "flagged"}
@@ -97,22 +97,22 @@ func _process(delta):
 				else:
 					_target_background = Color(1, 1, 1)
 		if $Background.modulate.r > _target_background.r:
-			$Background.modulate.r = clamp($Background.modulate.r - delta, _target_background.r, 1)
+			$Background.modulate.r = clamp($Background.modulate.r - _color_step_size * delta, _target_background.r, 1)
 			_temp_changed = _temp_changed || ! $Background.modulate.r == _target_background.r
 		elif $Background.modulate.r < _target_background.r:
-			$Background.modulate.r = clamp($Background.modulate.r + delta, 0, _target_background.r)
+			$Background.modulate.r = clamp($Background.modulate.r + _color_step_size * delta, 0, _target_background.r)
 			_temp_changed = _temp_changed || ! $Background.modulate.r == _target_background.r
 		if $Background.modulate.g > _target_background.g:
-			$Background.modulate.g = clamp($Background.modulate.g - delta, _target_background.g, 1)
+			$Background.modulate.g = clamp($Background.modulate.g - _color_step_size * delta, _target_background.g, 1)
 			_temp_changed = _temp_changed || ! $Background.modulate.g == _target_background.g
 		elif $Background.modulate.g < _target_background.g:
-			$Background.modulate.g = clamp($Background.modulate.g + delta, 0, _target_background.g)
+			$Background.modulate.g = clamp($Background.modulate.g + _color_step_size * delta, 0, _target_background.g)
 			_temp_changed = _temp_changed || ! $Background.modulate.g == _target_background.g
 		if $Background.modulate.b > _target_background.b:
-			$Background.modulate.b = clamp($Background.modulate.b - delta, _target_background.b, 1)
+			$Background.modulate.b = clamp($Background.modulate.b - _color_step_size * delta, _target_background.b, 1)
 			_temp_changed = _temp_changed || ! $Background.modulate.b == _target_background.b
 		elif $Background.modulate.b < _target_background.b:
-			$Background.modulate.b = clamp($Background.modulate.b + delta, 0, _target_background.b)
+			$Background.modulate.b = clamp($Background.modulate.b + _color_step_size * delta, 0, _target_background.b)
 			_temp_changed = _temp_changed || ! $Background.modulate.b == _target_background.b
 		_changed = _changed || _temp_changed
 
