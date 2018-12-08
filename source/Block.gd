@@ -2,13 +2,17 @@ extends Area2D
 
 var _mine_texture = ImageTexture.new()
 var _flag_texture = ImageTexture.new()
-var _style_border = StyleBoxFlat.new()
-var _style_background = StyleBoxFlat.new()
+var _background_start_color = Color(0.1, 0.1, 0.1)
+var _background_end_color = Color(0.1, 0.1, 0.1)
+var _background_color_progress = 1
+var _highlight_start_color = Color(0, 0, 0)
+var _highlight_end_color = Color(0, 0, 0)
+var _highlight_color_progress = 1
+var _color_step_size = 5
 var _highlighted = false
 var _lowlighted = false
 var _delta_number = number
 var _changed = false
-var _color_step_size = 5
 var coordinates = [-1, -1, -1, -1]
 var mine = false
 var state = "covered" # in {"covered", "uncovered", "flagged"}
@@ -26,14 +30,21 @@ func _ready():
 func _process(delta):
 	if _changed:
 		_changed = false
+		redraw(delta)
+
+func redraw(delta = 0):
 		var _temp_changed = false
-		var _target_background = Color(0.1, 0.1, 0.1)
-		if _highlighted && $Border.modulate.g < 1:
-			$Border.modulate = Color(0, clamp($Border.modulate.g + _color_step_size * delta, 0, 1), clamp($Border.modulate.b + _color_step_size * delta, 0, 1))
-			_temp_changed = _temp_changed || $Border.modulate.g < 1
-		elif ! _highlighted && $Border.modulate.g > 0:
-			$Border.modulate = Color(0, clamp($Border.modulate.g - _color_step_size * delta, 0, 1), clamp($Border.modulate.b - _color_step_size * delta, 0, 1))
-			_temp_changed = _temp_changed || $Border.modulate.g > 0
+		_highlight_color_progress = clamp(_highlight_color_progress + _color_step_size * delta, 0, 1)
+		var _target_highlight = Color(0, 0, 0)
+		if _highlighted:
+			_target_highlight = Color(0, 1, 1)
+		if ! _target_highlight == _highlight_end_color:
+			_highlight_start_color = $Border.modulate
+			_highlight_end_color = _target_highlight
+			_highlight_color_progress = clamp(_color_step_size * delta, 0, 1)
+		if ! $Border.modulate == _highlight_end_color:
+			$Border.modulate = _highlight_start_color + (_highlight_end_color - _highlight_start_color) * _highlight_color_progress
+			_temp_changed = _temp_changed || ! $Border.modulate == _highlight_end_color
 		if global.delta:
 			$Number.text = str(_delta_number)
 		else:
@@ -44,6 +55,8 @@ func _process(delta):
 			$Number.get_font("font").size = 21 * global.scale
 		$Number.rect_size = Vector2(0, 0)
 		$Number.rect_position = $Border.rect_size / 2 - $Number.rect_size / 2
+		_background_color_progress = clamp(_background_color_progress + _color_step_size * delta, 0, 1)
+		var _target_background = Color(0.1, 0.1, 0.1)
 		if global.paused && ! global.finished:
 			$Number.visible = false
 			$Sprite.visible = false
@@ -96,24 +109,13 @@ func _process(delta):
 						_target_background = Color(1, 0, 0)
 				else:
 					_target_background = Color(1, 1, 1)
-		if $Background.modulate.r > _target_background.r:
-			$Background.modulate.r = clamp($Background.modulate.r - _color_step_size * delta, _target_background.r, 1)
-			_temp_changed = _temp_changed || ! $Background.modulate.r == _target_background.r
-		elif $Background.modulate.r < _target_background.r:
-			$Background.modulate.r = clamp($Background.modulate.r + _color_step_size * delta, 0, _target_background.r)
-			_temp_changed = _temp_changed || ! $Background.modulate.r == _target_background.r
-		if $Background.modulate.g > _target_background.g:
-			$Background.modulate.g = clamp($Background.modulate.g - _color_step_size * delta, _target_background.g, 1)
-			_temp_changed = _temp_changed || ! $Background.modulate.g == _target_background.g
-		elif $Background.modulate.g < _target_background.g:
-			$Background.modulate.g = clamp($Background.modulate.g + _color_step_size * delta, 0, _target_background.g)
-			_temp_changed = _temp_changed || ! $Background.modulate.g == _target_background.g
-		if $Background.modulate.b > _target_background.b:
-			$Background.modulate.b = clamp($Background.modulate.b - _color_step_size * delta, _target_background.b, 1)
-			_temp_changed = _temp_changed || ! $Background.modulate.b == _target_background.b
-		elif $Background.modulate.b < _target_background.b:
-			$Background.modulate.b = clamp($Background.modulate.b + _color_step_size * delta, 0, _target_background.b)
-			_temp_changed = _temp_changed || ! $Background.modulate.b == _target_background.b
+		if ! _target_background == _background_end_color:
+			_background_start_color = $Background.modulate
+			_background_end_color = _target_background
+			_background_color_progress = clamp(_color_step_size * delta, 0, 1)
+		if ! $Background.modulate == _background_end_color:
+			$Background.modulate = _background_start_color + (_background_end_color - _background_start_color) * _background_color_progress
+			_temp_changed = _temp_changed || ! $Background.modulate == _background_end_color
 		_changed = _changed || _temp_changed
 
 func resize():

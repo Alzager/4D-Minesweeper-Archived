@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Block.gd" type="Script" id=1]
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=1]
 
 content_margin_left = -1.0
 content_margin_right = -1.0
@@ -30,7 +30,7 @@ shadow_size = 0
 anti_aliasing = true
 anti_aliasing_size = 1
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=2]
 
 content_margin_left = -1.0
 content_margin_right = -1.0
@@ -58,21 +58,21 @@ shadow_size = 0
 anti_aliasing = true
 anti_aliasing_size = 1
 
-[sub_resource type="DynamicFontData" id=1]
+[sub_resource type="DynamicFontData" id=3]
 
 hinting = 2
 font_path = "res://Monda-Bold.ttf"
 _sections_unfolded = [ "Resource" ]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=4]
 
 size = 21
 use_mipmaps = false
 use_filter = false
-font_data = SubResource( 1 )
+font_data = SubResource( 3 )
 _sections_unfolded = [ "Font", "Settings" ]
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=5]
 
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
@@ -104,7 +104,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 1 )
 _sections_unfolded = [ "Focus", "Grow Direction", "Hint", "Margin", "Material", "Rect", "Theme", "Visibility", "custom_styles" ]
 
 [node name="Background" type="Panel" parent="." index="1"]
@@ -124,7 +124,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 2 )
 _sections_unfolded = [ "Material", "Rect", "Visibility", "custom_styles" ]
 
 [node name="Number" type="Label" parent="." index="2"]
@@ -141,7 +141,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 percent_visible = 1.0
 lines_skipped = 0
@@ -155,7 +155,7 @@ _sections_unfolded = [ "Animation", "Offset", "Region", "Transform", "Visibility
 
 [node name="Collision" type="CollisionShape2D" parent="." index="4"]
 
-shape = SubResource( 3 )
+shape = SubResource( 5 )
 _sections_unfolded = [ "Visibility" ]
 
 
