@@ -27,6 +27,10 @@ window/size/width=600
 
 translations=PoolStringArray( "res://texts.de.translation", "res://texts.en.translation" )
 
+[physics]
+
+common/physics_fps=1000
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
