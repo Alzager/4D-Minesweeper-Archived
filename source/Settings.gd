@@ -182,7 +182,7 @@ func _on_ImportOptionButton_item_selected(ID):
 	if ID < _user_files:
 		_import_game_path = "user://" + _import_name
 		$ImportButton.disabled = false
-	elif ID > _user_files:
+	elif ID > _user_files || _user_files == 0:
 		_import_game_path = global.exports + "exports/" + _import_name
 		$ImportButton.disabled = false
 	else:
