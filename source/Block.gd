@@ -256,8 +256,6 @@ func set_lights(options):
 	_changed = _changed || _temp_changed
 
 func change_delta(how):
-	if recalc_neighbors:
-		get_neighbors()
 	var _temp_changed = false
 	if how == 1:
 		_delta_number = _delta_number + 1
@@ -269,6 +267,8 @@ func change_delta(how):
 	_changed = _changed || _temp_changed
 
 func update_delta_zero():
+	if recalc_neighbors:
+		get_neighbors()
 	var _local_delta_zero
 	_local_delta_zero = true
 	if _delta_number == 0:
