@@ -13,6 +13,7 @@ var _highlighted = false
 var _lowlighted = false
 var _delta_number = number
 var _changed = false
+var _delta_zero = true
 var coordinates = [-1, -1, -1, -1]
 var mine = false
 var state = "covered" # in {"covered", "uncovered", "flagged"}
@@ -70,7 +71,10 @@ func redraw(delta = 0):
 						$Sprite.set_texture(_mine_texture)
 						_target_background = Color(0.5, 0.5, 0.5)
 					else:
-						$Number.visible = true
+						if int($Number.text) == 0 && _delta_zero:
+							$Number.visible = false
+						else:
+							$Number.visible = true
 						$Sprite.visible = false
 						if int($Number.text) >= 0:
 							_target_background = Color(0.5, 0.5 - int($Number.text) * 0.07, 0.5 - int($Number.text) * 0.07)
@@ -91,7 +95,10 @@ func redraw(delta = 0):
 					$Sprite.set_texture(_mine_texture)
 					_target_background = Color(1, 0, 0)
 				else:
-					$Number.visible = true
+					if int($Number.text) == 0 && _delta_zero:
+						$Number.visible = false
+					else:
+						$Number.visible = true
 					$Sprite.visible = false
 					if int($Number.text) >= 0:
 						_target_background = Color(1, 1 - int($Number.text) * 0.07, 1 - int($Number.text) * 0.07)
@@ -188,6 +195,8 @@ func clicked():
 		get_neighbors()
 	if state == "covered":
 		state = "uncovered"
+		for i in neighbors:
+			global.blocks[i[0]][i[1]][i[2]][i[3]].update_delta_zero()
 		if ! global.running:
 			global.set_running(true)
 			global.starting_time = OS.get_ticks_msec()
@@ -247,6 +256,8 @@ func set_lights(options):
 	_changed = _changed || _temp_changed
 
 func change_delta(how):
+	if recalc_neighbors:
+		get_neighbors()
 	var _temp_changed = false
 	if how == 1:
 		_delta_number = _delta_number + 1
@@ -254,4 +265,15 @@ func change_delta(how):
 	elif how == -1:
 		_delta_number = _delta_number - 1
 		_temp_changed = true
+	update_delta_zero()
 	_changed = _changed || _temp_changed
+
+func update_delta_zero():
+	var _local_delta_zero
+	_local_delta_zero = true
+	if _delta_number == 0:
+		for i in neighbors:
+			_local_delta_zero = _local_delta_zero && ! global.blocks[i[0]][i[1]][i[2]][i[3]].state == "covered"
+	if ! _local_delta_zero == _delta_zero:
+		_delta_zero = _local_delta_zero
+		_changed = true
