@@ -33,5 +33,4 @@ func _on_Yes_pressed():
 	queue_free()
 
 func _on_No_pressed():
-	global.new_game()
 	queue_free()
