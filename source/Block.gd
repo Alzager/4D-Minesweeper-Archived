@@ -12,7 +12,6 @@ var _color_step_size = 25
 var _highlighted = false
 var _lowlighted = false
 var _delta_number = number
-var _changed = false
 var _delta_zero = true
 var coordinates = [-1, -1, -1, -1]
 var mine = false
@@ -27,11 +26,12 @@ func _ready():
 	add_to_group("resizable")
 	exited()
 	resize()
+	set_physics_process(false)
+	set_process_input(false)
 
 func _process(delta):
-	if _changed:
-		_changed = false
-		redraw(delta)
+	set_process(false)
+	redraw(delta)
 
 func redraw(delta = 0):
 		var _temp_changed = false
@@ -123,7 +123,8 @@ func redraw(delta = 0):
 		if ! $Background.modulate == _background_end_color:
 			$Background.modulate = _background_start_color + (_background_end_color - _background_start_color) * _background_color_progress
 			_temp_changed = _temp_changed || ! $Background.modulate == _background_end_color
-		_changed = _changed || _temp_changed
+		if _temp_changed:
+			set_process(true)
 
 func resize():
 	var block_size = int(30 * global.scale)
@@ -141,7 +142,7 @@ func resize():
 	$Sprite.position = Vector2(border_size, border_size)
 	$Collision.shape.extents = $Border.rect_size / 2
 	$Collision.position = $Border.rect_position + $Collision.shape.extents
-	_changed = true
+	set_process(true)
 
 func count():
 	if recalc_neighbors:
@@ -150,7 +151,7 @@ func count():
 		if global.blocks[i[0]][i[1]][i[2]][i[3]].mine:
 			number = number + 1
 	_delta_number = number
-	_changed = true
+	set_process(true)
 
 func get_neighbors():
 	neighbors = []
@@ -210,7 +211,8 @@ func clicked():
 		if global.save_on_exit:
 			global.save_game()
 		_temp_changed = true
-	_changed = _changed || _temp_changed
+	if _temp_changed:
+		set_process(true)
 
 func uncover_neighbors():
 	if recalc_neighbors:
@@ -241,7 +243,8 @@ func flagged():
 		if global.save_on_exit:
 			global.save_game()
 		_temp_changed = true
-	_changed = _changed || _temp_changed
+	if _temp_changed:
+		set_process(true)
 
 func set_lights(options):
 	var _temp_changed = false
@@ -253,7 +256,8 @@ func set_lights(options):
 		if ! options.lowlight == _lowlighted:
 			_temp_changed = true
 			_lowlighted = options.lowlight
-	_changed = _changed || _temp_changed
+	if _temp_changed:
+		set_process(true)
 
 func change_delta(how):
 	var _temp_changed = false
@@ -264,7 +268,8 @@ func change_delta(how):
 		_delta_number = _delta_number - 1
 		_temp_changed = true
 	update_delta_zero()
-	_changed = _changed || _temp_changed
+	if _temp_changed:
+		set_process(true)
 
 func update_delta_zero():
 	if recalc_neighbors:
@@ -276,4 +281,4 @@ func update_delta_zero():
 			_local_delta_zero = _local_delta_zero && ! global.blocks[i[0]][i[1]][i[2]][i[3]].state == "covered"
 	if ! _local_delta_zero == _delta_zero:
 		_delta_zero = _local_delta_zero
-		_changed = true
+		set_process(true)

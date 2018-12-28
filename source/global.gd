@@ -38,6 +38,8 @@ var win = preload("res://Win.tscn")
 var win_menu = win.instance()
 var message = preload("res://Message.tscn")
 var message_menu = message.instance()
+var resume = preload("res://Resume.tscn")
+var resume_menu = resume.instance()
 var successes_file_path = "user://successes"
 var game_id = ""
 var savefile = "user://save.sav"
@@ -87,9 +89,10 @@ func resize():
 
 func reposition():
 	menu.rect_position.x = 0
-	board.rect_position.x = (OS.window_size.x - board.rect_size.x) / 2
-	menu.rect_position.y = max(0, (OS.window_size.y - menu.rect_size.y - board.rect_size.y - global.margin * global.scale) / 2)
-	board.rect_position.y = global.menu.rect_position.y + global.menu.rect_size.y + global.margin * global.scale
+	if board:
+		board.rect_position.x = (OS.window_size.x - board.rect_size.x) / 2
+		menu.rect_position.y = max(0, (OS.window_size.y - menu.rect_size.y - board.rect_size.y - global.margin * global.scale) / 2)
+		board.rect_position.y = global.menu.rect_position.y + global.menu.rect_size.y + global.margin * global.scale
 	resizing = false
 
 func set_running(to):
@@ -287,7 +290,7 @@ func _ready():
 	settings_menu.update_ui()
 	var savegame = File.new()
 	if savegame.file_exists(savefile) && save_on_exit:
-		load_game()
+		get_tree().get_root().call_deferred("add_child", resume_menu)
 	else:
 		new_game()
 	switch_locale()
