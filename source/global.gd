@@ -439,7 +439,8 @@ func clear_board():
 					blocks[a][b][c][d].neighbors = []
 					blocks[a][b][c][d].coordinates = [-1, -1, -1, -1]
 					blocks[a][b][c][d].queue_free()
-	board.queue_free()
+	if board:
+		board.queue_free()
 	blocks = []
 	paused = false
 	finished = false
