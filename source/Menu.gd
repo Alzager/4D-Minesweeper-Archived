@@ -254,7 +254,10 @@ func _on_CheckBox_toggled(button_pressed):
 func _on_Start_pressed():
 	if ! global.paused:
 		_on_Pause_pressed()
-	global.newgame_menu.popup_centered()
+	if global.board:
+		global.newgame_menu.popup_centered()
+	else:
+		global.new_game()
 
 
 func _on_GetStarted_pressed():

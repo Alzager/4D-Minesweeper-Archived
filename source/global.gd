@@ -93,6 +93,8 @@ func reposition():
 		board.rect_position.x = (OS.window_size.x - board.rect_size.x) / 2
 		menu.rect_position.y = max(0, (OS.window_size.y - menu.rect_size.y - board.rect_size.y - global.margin * global.scale) / 2)
 		board.rect_position.y = global.menu.rect_position.y + global.menu.rect_size.y + global.margin * global.scale
+	else:
+		menu.rect_position.y = max(0, (OS.window_size.y - menu.rect_size.y) / 2)
 	resizing = false
 
 func set_running(to):
@@ -291,8 +293,6 @@ func _ready():
 	var savegame = File.new()
 	if savegame.file_exists(savefile) && save_on_exit:
 		get_tree().get_root().call_deferred("add_child", resume_menu)
-	else:
-		new_game()
 	switch_locale()
 	write_config()
 
