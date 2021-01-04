@@ -203,7 +203,7 @@ func update_imports():
 		var savegame = File.new()
 		if savegame.open("user://" + i, File.READ) == OK:
 			loaddict = parse_json(savegame.get_line())
-			if loaddict.has("size") && loaddict.has("mines_list") && loaddict.has("sphere"):
+			if typeof(loaddict) == 18 && loaddict.has("size") && loaddict.has("mines_list") && loaddict.has("sphere"):
 				_user_files += 1
 				if successes.has(i):
 					$ImportOptionButton.add_item(i + " <" + successes[i] + ">")
