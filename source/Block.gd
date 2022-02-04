@@ -2,6 +2,7 @@ extends Area2D
 
 var _mine_texture = ImageTexture.new()
 var _flag_texture = ImageTexture.new()
+var _question_texture = ImageTexture.new()
 var _background_start_color = Color(0.1, 0.1, 0.1)
 var _background_end_color = Color(0.1, 0.1, 0.1)
 var _background_color_progress = 1
@@ -15,7 +16,7 @@ var _delta_number = number
 var _delta_zero = true
 var coordinates = [-1, -1, -1, -1]
 var mine = false
-var state = "covered" # in {"covered", "uncovered", "flagged"}
+var state = "covered" # in {"covered", "uncovered", "flagged", "questioned"}
 var number = 0
 var neighbors = []
 var recalc_neighbors = true
@@ -116,6 +117,18 @@ func redraw(delta = 0):
 						_target_background = Color(1, 0, 0)
 				else:
 					_target_background = Color(1, 1, 1)
+			elif state == "questioned":
+				$Number.visible = false
+				$Sprite.visible = true
+				$Sprite.set_texture(_mine_texture)
+				$Sprite.set_texture(_question_texture)
+				if global.finished:
+					if mine:
+						_target_background = Color(0, 1, 0)
+					else:
+						_target_background = Color(1, 0, 0)
+				else:
+					_target_background = Color(1, 1, 1)
 		if ! _target_background == _background_end_color:
 			_background_start_color = $Background.modulate
 			_background_end_color = _target_background
@@ -133,8 +146,10 @@ func resize():
 	var mine_scale = background_size / global.mine_image.get_size().y
 	_mine_texture.create_from_image(global.mine_image)
 	_flag_texture.create_from_image(global.flag_image)
+	_question_texture.create_from_image(global.question_image)
 	_mine_texture.set_size_override(global.mine_image.get_size() * mine_scale)
 	_flag_texture.set_size_override(global.flag_image.get_size() * mine_scale)
+	_question_texture.set_size_override(global.question_image.get_size() * mine_scale)
 	$Border.rect_size = Vector2(block_size, block_size)
 	$Background.rect_size = Vector2(background_size, background_size)
 	$Background.rect_position = Vector2(border_size, border_size)
@@ -194,7 +209,7 @@ func clicked():
 	var _temp_changed = false
 	if recalc_neighbors:
 		get_neighbors()
-	if state == "covered":
+	if state == "covered" || state == "questioned":
 		state = "uncovered"
 		for i in neighbors:
 			global.blocks[i[0]][i[1]][i[2]][i[3]].update_delta_zero()
@@ -225,7 +240,7 @@ func flagged():
 	var _temp_changed = false
 	if recalc_neighbors:
 		get_neighbors()
-	if state == "covered":
+	if state == "covered" || state == "questioned":
 		state = "flagged"
 		global.remaining_mines = global.remaining_mines - 1
 		global.menu.update_remaining()
@@ -240,6 +255,23 @@ func flagged():
 		global.menu.update_remaining()
 		for i in neighbors:
 			global.blocks[i[0]][i[1]][i[2]][i[3]].change_delta(1)
+		if global.save_on_exit:
+			global.save_game()
+		_temp_changed = true
+	if _temp_changed:
+		set_process(true)
+
+func questioned():
+	var _temp_changed = false
+	if recalc_neighbors:
+		get_neighbors()
+	if state == "covered":
+		state = "questioned"
+		if global.save_on_exit:
+			global.save_game()
+		_temp_changed = true
+	elif state == "questioned":
+		state = "covered"
 		if global.save_on_exit:
 			global.save_game()
 		_temp_changed = true

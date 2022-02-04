@@ -46,6 +46,7 @@ var savefile = "user://save.sav"
 var mine_image = Image.new()
 var delta_image = Image.new()
 var flag_image = Image.new()
+var question_image = Image.new()
 var sphere_image = Image.new()
 var down_image = Image.new()
 var right_image = Image.new()
@@ -105,6 +106,7 @@ func load_game():
 	var mines_list = []
 	var uncovered_list = []
 	var flaged_list = []
+	var questioned_list = []
 	var loaddict = {}
 	var savegame = File.new()
 	savegame.open(savefile, File.READ)
@@ -116,6 +118,7 @@ func load_game():
 		mines_list = loaddict["mines_list"]
 		uncovered_list = loaddict["uncovered_list"]
 		flaged_list = loaddict["flaged_list"]
+		questioned_list = loaddict["questioned_list"] if loaddict.has("questioned_list") else []
 		game_id = loaddict["game_id"]
 		set_running(true)
 		finished = false
@@ -132,6 +135,8 @@ func load_game():
 			global.blocks[i[0]][i[1]][i[2]][i[3]].clicked()
 		for i in flaged_list:
 			global.blocks[i[0]][i[1]][i[2]][i[3]].flagged()
+		for i in questioned_list:
+			global.blocks[i[0]][i[1]][i[2]][i[3]].questioned()
 		menu._on_Pause_pressed()
 		time_offset = loaddict["time"] * 1000
 		running_time = loaddict["time"] * 1000
@@ -144,6 +149,7 @@ func save_game():
 	var mines_list = []
 	var uncovered_list = []
 	var flaged_list = []
+	var questioned_list = []
 	for a in range(global.blocks.size()):
 		for b in range(global.blocks[0].size()):
 			for c in range(global.blocks[0][0].size()):
@@ -154,6 +160,8 @@ func save_game():
 						uncovered_list.append([a, b, c, d])
 					if global.blocks[a][b][c][d].state == "flagged":
 						flaged_list.append([a, b, c, d])
+					if global.blocks[a][b][c][d].state == "questioned":
+						questioned_list.append([a, b, c, d])
 	var savegame = File.new()
 	var savedict = {
 	size=[dimensions[0][0], dimensions[1][0], dimensions[2][0], dimensions[3][0]],
@@ -162,6 +170,7 @@ func save_game():
 	mines_list=mines_list,
 	uncovered_list=uncovered_list,
 	flaged_list=flaged_list,
+	questioned_list=questioned_list,
 	ended=int(finished),
 	game_id=game_id
 	}
@@ -272,6 +281,7 @@ func import_game(path, _import_name):
 func _ready():
 	delta_image = get_tree().get_root().get_node("Main").get_node("Delta").texture.get_data()
 	flag_image = get_tree().get_root().get_node("Main").get_node("Flag").texture.get_data()
+	question_image = get_tree().get_root().get_node("Main").get_node("Question").texture.get_data()
 	mine_image = get_tree().get_root().get_node("Main").get_node("Mine").texture.get_data()
 	sphere_image = get_tree().get_root().get_node("Main").get_node("Sphere").texture.get_data()
 	down_image = get_tree().get_root().get_node("Main").get_node("Down").texture.get_data()

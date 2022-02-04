@@ -28,8 +28,11 @@ func _input(event):
 							input._switch_state("none", block.coordinates)
 							block.flagged()
 						elif event.button_index == 3:
-							input._drag_start = block.coordinates
-							input._switch_state("drag", block.coordinates)
+							input._switch_state("none", block.coordinates)
+							block.questioned()
+#						elif event.button_index == 3:
+#							input._drag_start = block.coordinates
+#							input._switch_state("drag", block.coordinates)
 					elif input._state == "lowlight this":
 						if event.button_index == 1 && ! event.pressed:
 							input._switch_state("none", block.coordinates)
