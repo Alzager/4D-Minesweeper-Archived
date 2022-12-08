@@ -9,67 +9,38 @@
 [ext_resource path="res://super_down.svg" type="Texture" id=7]
 [ext_resource path="res://super_right.svg" type="Texture" id=8]
 
-[node name="Main" type="Control" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
+[node name="Main" type="Control"]
 margin_right = 40.0
 margin_bottom = 40.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
 
-[node name="Delta" type="Sprite" parent="." index="0"]
-
+[node name="Delta" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 1 )
-_sections_unfolded = [ "Visibility" ]
 
-[node name="Flag" type="Sprite" parent="." index="1"]
-
+[node name="Flag" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 2 )
-_sections_unfolded = [ "Visibility" ]
 
-[node name="Mine" type="Sprite" parent="." index="2"]
-
+[node name="Mine" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 3 )
-_sections_unfolded = [ "Visibility" ]
 
-[node name="Sphere" type="Sprite" parent="." index="3"]
-
+[node name="Sphere" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 4 )
-_sections_unfolded = [ "Visibility" ]
 
-[node name="Down" type="Sprite" parent="." index="4"]
-
+[node name="Down" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 5 )
-_sections_unfolded = [ "Visibility" ]
 
-[node name="Right" type="Sprite" parent="." index="5"]
-
+[node name="Right" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 6 )
-_sections_unfolded = [ "Visibility" ]
 
-[node name="SuperDown" type="Sprite" parent="." index="6"]
-
+[node name="SuperDown" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 7 )
-_sections_unfolded = [ "Visibility" ]
 
-[node name="SuperRight" type="Sprite" parent="." index="7"]
-
+[node name="SuperRight" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 8 )
-_sections_unfolded = [ "Visibility" ]
-
-
