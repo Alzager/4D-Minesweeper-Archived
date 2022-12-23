@@ -8,12 +8,12 @@ func _input(event):
 	var _inside = ! global.settings_menu.is_visible_in_tree() && ! global.newgame_menu.is_visible_in_tree() && ! global.win_menu.is_visible_in_tree() && ! global.lose_menu.is_visible_in_tree() && ! global.message_menu.is_visible_in_tree()
 	if _inside:
 		var space_state = get_tree().get_root().get_world_2d().direct_space_state
-		var colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 2)
+		var colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 2, true, true)
 		_inside = colliders.size() > 0
 		if _inside:
-			colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1)
+			colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1, true, true)
 			if colliders.size() > 0:
-				var block = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1)[0].collider
+				var block = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1, true, true)[0].collider
 				if ! block.coordinates == input._position:
 					if input._position.find(-1) == -1:
 						global.blocks[input._position[0]][input._position[1]][input._position[2]][input._position[3]].exited()
@@ -72,12 +72,12 @@ func _physics_process(delta):
 	var _inside = ! global.settings_menu.is_visible_in_tree() && ! global.newgame_menu.is_visible_in_tree() && ! global.win_menu.is_visible_in_tree() && ! global.lose_menu.is_visible_in_tree() && ! global.message_menu.is_visible_in_tree()
 	if _inside:
 		var space_state = get_tree().get_root().get_world_2d().direct_space_state
-		var colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 2)
+		var colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 2, true, true)
 		_inside = colliders.size() > 0
 		if _inside:
-			colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1)
+			colliders = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1, true, true)
 			if colliders.size() > 0:
-				var block = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1)[0].collider
+				var block = space_state.intersect_point(get_viewport().get_mouse_position(), 1, [], 1, true, true)[0].collider
 				if ! block.coordinates == input._position:
 					if input._position.find(-1) == -1:
 						global.blocks[input._position[0]][input._position[1]][input._position[2]][input._position[3]].exited()
